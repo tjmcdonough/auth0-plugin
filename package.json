@@ -1,0 +1,29 @@
+{
+  "name": "weweb-auth-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weweb-assets/plugin-auth0"
+  },
+  "version": "1.0.0",
+  "description": "This is an plugin for [weweb.io](https://www.weweb.io/).",
+  "main": "ww-config.js",
+  "scripts": {
+    "build": "weweb build",
+    "serve": "weweb serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@weweb/cli": "latest",
+    "auth0-js": "^9.19.1",
+    "eslint": "^8.24.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.5.1",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6"
+  }
+}
