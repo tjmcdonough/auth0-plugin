@@ -47,6 +47,7 @@ export default {
         /* wwEditor:end */
 
         /* wwFront:start */
+        
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
         this.client = await createAuth0Client({
