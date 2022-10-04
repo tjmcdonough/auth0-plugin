@@ -26,6 +26,9 @@ export default {
     async createClient() {
         const { auth0_domain, auth0_clientId, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
         if (!auth0_domain || !auth0_clientId || !afterSignInPageId) return;
+        const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
+        const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
+
         this.auth0_webClient = await auth0.WebAuth({
             audience: auth0_audienceURL,
             responseType: 'token',
@@ -35,16 +38,10 @@ export default {
             client_id: auth0_clientId,
             redirect_uri: `${window.location.origin}${pagePath}`,
         });
-        const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
-        const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
-        this.auth0_webClient = await createAuth0Client({
-            domain: auth0_domain,
-            client_id: auth0_clientId,
-            redirect_uri: `${window.location.origin}${pagePath}`,
-        });
     },
     googleLoginWithRedirect() {
-        return this.auth0_webClient.authorize({
+        if (!this.auth0_webClient) return;
+        else return this.auth0_webClient.authorize({
             connection: 'google-oauth2',
             connection_scope: '',
         });
