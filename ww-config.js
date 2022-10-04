@@ -35,6 +35,7 @@ export default {
         {
             name: 'Google Login with Redirect',
             code: 'googleLoginWithRedirect',
+            isAsync: true
         },
     ],
 };

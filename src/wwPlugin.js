@@ -50,10 +50,10 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    googleLoginWithRedirect() {
+    async googleLoginWithRedirect() {
         if (!this.auth0_webClient) {
             wwLib.wwLog.error('auth0 webclient is not initialised');
-            return
+            await this.createClient()
         }
         else return this.auth0_webClient.authorize({
             connection: 'google-oauth2',
