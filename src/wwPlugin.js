@@ -16,7 +16,7 @@ export default {
     \================================================================================================*/
     async onLoad() {
         wwLib.wwLog.error('custom Auth0 plugin loading');
-        await this.createClient();
+        this.createClient();
         if (!this.auth0_webClient) return;
     },
     /*=============================================m_ÔÔ_m=============================================\
@@ -37,7 +37,7 @@ export default {
         const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
 
         try {
-            this.auth0_webClient = await auth0.WebAuth({
+            this.auth0_webClient = new auth0.WebAuth({
                 audience: auth0_audienceURL,
                 clientID: auth0_clientId,
                 domain: auth0_domain,
@@ -53,7 +53,6 @@ export default {
     async googleLoginWithRedirect() {
         if (!this.auth0_webClient) {
             wwLib.wwLog.error('auth0 webclient is not initialised');
-            await this.createClient()
         }
         else return this.auth0_webClient.authorize({
             connection: 'google-oauth2',
