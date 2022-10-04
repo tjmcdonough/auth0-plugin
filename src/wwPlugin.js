@@ -15,6 +15,7 @@ export default {
         Plugin API
     \================================================================================================*/
     async onLoad() {
+        wwLib.wwLog.error('custom Auth0 plugin loading');
         await this.createClient();
         if (!this.auth0_webClient) return;
     },
