@@ -1,5 +1,6 @@
 export default {
     editor: {
+        label: "custom Auth0",
         settings: [
             {
                 label: 'Configuration',

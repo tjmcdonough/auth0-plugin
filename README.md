@@ -1,6 +1,4 @@
-This is a test integration of Stripe Elements into weweb.io.
-
-![preview](./preview.gif)
+# PLUGIN-AUTH0
 
 # Implemented features
 
@@ -18,4 +16,4 @@ To serve locally, run `npm run serve --port=[PORT]`, and then go to Weweb editor
 
 ## Build
 
-Before release, you can check build error by running `npm run build --name=dexla-auth`
+Before release, you can check build error by running `npm run build --name="dexla-auth" --type="plugin"`
