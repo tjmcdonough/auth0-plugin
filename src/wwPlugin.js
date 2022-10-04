@@ -8,7 +8,7 @@ import './components/Functions/Login.vue';
 
 import auth0 from 'auth0-js';
 
-const ACCESS_COOKIE_NAME = 'auth0_jwt';
+const ACCESS_COOKIE_NAME = 'session';
 
 export default {
     /*=============================================m_ÔÔ_m=============================================\
@@ -18,6 +18,7 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
+        await this.checkRedirectHash();
     },
     /*=============================================m_ÔÔ_m=============================================\
         Auth0 API
@@ -52,6 +53,9 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
+    parseHash: (hash, cb) => {
+        return webAuthClient.parseHash({ hash }, cb);
+    },
     async googleLoginWithRedirect() {
         if (!this.auth0_webClient) {
             wwLib.wwLog.error('auth0 webclient is not initialised');
@@ -60,5 +64,32 @@ export default {
             connection: 'google-oauth2',
             connection_scope: '',
         });
+    },
+    async checkRedirectHash() {
+        try {
+            const router = wwLib.manager ? wwLib.getEditorRouter() : wwLib.getFrontRouter();
+            await router.isReady();
+            const authHash = router.currentRoute.value.has;
+            wwLib.wwLog.error(`got auth hash of ${authHash}`);
+            if (authHash?.accessToken) {
+                await this.setCookieSession();
+                this.redirectAfterLogin();
+            }
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
+    async setCookieSession(jwt) {
+        window.vm.config.globalProperties.$cookie.setCookie(ACCESS_COOKIE_NAME, jwt);
+        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, jwt);
+    },
+    redirectAfterLogin() {
+        /* wwFront:start */
+        const pagePath = wwLib.wwPageHelper.getPagePath(this.settings.publicData.afterSignInPageId);
+        wwLib.goTo(pagePath);
+        /* wwFront:end */
+        /* wwEditor:start */
+        wwLib.goTo(this.settings.publicData.afterSignInPageId);
+        /* wwEditor:end */
     },
 };

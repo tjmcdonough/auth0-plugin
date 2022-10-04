@@ -26,11 +26,11 @@ export default {
         // unsure what this is required for
         // designSystemId: 'ec2eebfe-499b-43c4-b260-80ee5a4d9504',
     },
-    // variables: [
-    //     { name: 'auth0_user', value: 'auth0_user', type: 'object', defaultValue: null },
-    //     { name: 'auth0_jwt', value: 'auth0_jwt', type: 'accessToken', defaultValue: null },
-    //     { name: 'isAuthenticated', value: 'isAuthenticated', type: 'boolean', defaultValue: false },
-    // ],
+    variables: [
+        { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
+        { name: 'auth0_jwt', value: 'token', type: 'accessToken', defaultValue: null },
+        { name: 'isAuthenticated', value: 'isAuthenticated', type: 'boolean', defaultValue: false },
+    ],
     actions: [
         {
             name: 'Google Login with Redirect',
