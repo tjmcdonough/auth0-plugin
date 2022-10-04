@@ -37,7 +37,7 @@ export default {
         });
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
-        this.client = await createAuth0Client({
+        this.auth0_webClient = await createAuth0Client({
             domain: auth0_domain,
             client_id: auth0_clientId,
             redirect_uri: `${window.location.origin}${pagePath}`,

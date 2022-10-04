@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import auth0, { getSPAClientRedirection } from '../../wwPlugin.js';
+import auth0 from '../../wwPlugin.js';
 
 export default {
     props: {
