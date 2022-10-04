@@ -1,6 +1,5 @@
 export default {
     editor: {
-        label: "custom Auth0",
         settings: [
             {
                 label: 'Configuration',
@@ -35,20 +34,6 @@ export default {
         {
             name: 'Google Login with Redirect',
             code: 'googleLoginWithRedirect',
-            isAsync: true,
-            /* wwEditor:start */
-            edit: () => import('./src/components/Functions/Login.vue'),
-            getIsValid() {
-                return true;
-            },
-            /* wwEditor:end */
         },
-        // {
-        //     name: 'Logout',
-        //     code: 'logout',
-        //     /* wwEditor:start */
-        //     edit: () => import('./src/components/Functions/Logout.vue'),
-        //     /* wwEditor:end */
-        // }
     ],
 };

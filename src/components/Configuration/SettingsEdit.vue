@@ -47,16 +47,6 @@ export default {
             return wwLib.envMode === 'production';
         },
     },
-    async mounted () {
-        this.isLoading = true;
-        this.$emit('update:settings', {
-            ...this.settings,
-            publicData: { ...this.settings.publicData, auth0_clientId: null },
-            privateData: { ...this.settings.privateData, M2MClientSecret: null },
-        });
-
-        this.isLoading = false;
-    },
     methods: {
         setDomain (domain) {
             wwLib.wwLog.log('setting domain');
@@ -67,8 +57,7 @@ export default {
             wwLib.wwLog.log('setting clientId')
             this.$emit('update:settings', {
                 ...this.settings,
-                publicData: { ...this.settings.publicData, auth0_clientId: clientId },
-                // privateData: { ...this.settings.privateData, SPAClientSecret: client.client_secret },
+                privateData: { ...this.settings.publicData, auth0_clientId: clientId },
             });
         },
         async onClientIdChange () {
@@ -78,15 +67,6 @@ export default {
                 const newClient = await auth0.createClient();
                 this.client = newClient;
                 wwLib.wwLog.log(newClient);
-                this.$emit('update:settings', {
-                    ...this.settings,
-                    publicData: {
-                        ...this.settings.publicData,
-                    },
-                    privateData: {
-                        ...this.settings.privateData,
-                    },
-                });
             } catch (err) {
                 wwLib.wwNotification.open({ text: 'Make sure the domain and token are correct.', color: 'red' });
                 wwLib.wwLog.error(err);

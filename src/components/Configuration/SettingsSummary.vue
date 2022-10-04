@@ -6,9 +6,29 @@
                     <wwEditorIcon large name="link" class="auth0-settings-summary__icon" />
                 </div>
                 <span class="auth0-settings-summary__value caption-m">
-                    Auth0 Domain: {{ settings.publicData.auth0_domain }}
-                    Auth0 ClientId: {{ settings.publicData.auth0_clientId }}
-                    Auth0 Audience URL: {{ settings.publicData.auth0_audienceURL }}
+                    {{ settings.publicData.auth0_domain }}
+                </span>
+            </div>
+        </wwEditorFormRow>
+        <wwEditorFormRow label="Client ID">
+            <div class="auth0-settings-summary__elem">
+                <div>
+                    <wwEditorIcon large name="auth" class="auth0-settings-summary__icon" />
+                </div>
+                <span class="auth0-settings-summary__value caption-m">
+                    
+                    {{ settings.publicData.auth0_clientId }}
+                    
+                </span>
+            </div>
+        </wwEditorFormRow>
+        <wwEditorFormRow label="Audience URL">
+            <div class="auth0-settings-summary__elem">
+                <div>
+                    <wwEditorIcon large name="link" class="auth0-settings-summary__icon" />
+                </div>
+                <span class="auth0-settings-summary__value caption-m">
+                    {{ settings.publicData.auth0_audienceURL }}
                 </span>
             </div>
         </wwEditorFormRow>

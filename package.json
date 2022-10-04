@@ -1,6 +1,6 @@
 {
   "name": "custom-weweb-auth-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "This is an plugin for [weweb.io](https://www.weweb.io/).",
   "main": "ww-config.js",
   "scripts": {
@@ -18,8 +18,6 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
-    "auth0-js": "^9.19.1",
-    "graphql": "^16.6.0",
-    "graphql-tag": "^2.12.6"
+    "auth0-js": "^9.19.1"
   }
 }
