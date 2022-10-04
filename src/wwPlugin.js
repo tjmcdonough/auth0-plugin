@@ -36,13 +36,15 @@ export default {
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
 
+        const redirectURI = `${window.location.origin}${pagePath}`;
+        wwLib.wwLog.error(`redirectURI path is: ${redirectURI}`)
         try {
             this.auth0_webClient = new auth0.WebAuth({
                 audience: auth0_audienceURL,
                 clientID: auth0_clientId,
                 domain: auth0_domain,
                 leeway: 60, // allow for clock skew between devices and server
-                redirect_uri: `${window.location.origin}${pagePath}`,
+                redirect_uri: redirectURI,
                 responseType: 'token',
                 scope: 'openid profile email',
             });
