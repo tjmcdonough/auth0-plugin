@@ -25,7 +25,9 @@ export default {
 
     async createClient() {
         const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
-        const { auth0_clientId } = this.settings.privateData;
+        // TODO - how can we access privateData in a published app?
+        // const { auth0_clientId } = this.settings.privateData;
+        const { auth0_clientId } = this.settings.publicData;
         if (!auth0_domain || !auth0_clientId || !afterSignInPageId) {
             wwLib.wwLog.error(`auth0 configuration is not complete - auth0_domain: ${Boolean(auth0_domain)}, auth0_clientId: ${Boolean(auth0_clientId)}, afterSignInPageId: ${Boolean(afterSignInPageId)}`);
             return;

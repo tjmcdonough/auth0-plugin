@@ -17,7 +17,7 @@
                 </div>
                 <span class="auth0-settings-summary__value caption-m">
                     
-                    {{ settings.privateData.auth0_clientId }}
+                    {{ settings.publicData.auth0_clientId }}
                     
                 </span>
             </div>

@@ -8,7 +8,7 @@ export default {
                 summary: () => import('./src/components/Configuration/SettingsSummary.vue'),
                 getIsValid(settings) {
                     const { auth0_domain, auth0_audienceURL } = settings.publicData;
-                    const { auth0_clientId } = settings.privateData;
+                    const { auth0_clientId } = settings.publicData;
                     return !!auth0_domain && !!auth0_clientId && !!auth0_audienceURL;
                 },
             },
