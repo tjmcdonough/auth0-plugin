@@ -77,7 +77,7 @@ export default {
         try {
             const router = wwLib.manager ? wwLib.getEditorRouter() : wwLib.getFrontRouter();
             await router.isReady();
-            const authHash = router.currentRoute.value.has;
+            const authHash = router.currentRoute.value.hash;
             wwLib.wwLog.error(`got auth hash of ${authHash}`);
             if (authHash) {
                 this.auth0_webClient.parseHash({ hash: window.location.hash}, async (err, parsedHash) => {
