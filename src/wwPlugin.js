@@ -44,7 +44,7 @@ export default {
                 clientID: auth0_clientId,
                 domain: auth0_domain,
                 leeway: 60, // allow for clock skew between devices and server
-                redirect_uri: redirectURI,
+                redirectUri: redirectURI,
                 responseType: 'token',
                 scope: 'openid profile email',
             });
