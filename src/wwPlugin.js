@@ -24,7 +24,8 @@ export default {
     auth0_webClient: null,
 
     async createClient() {
-        const { auth0_domain, auth0_clientId, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
+        const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
+        const { auth0_clientId } = this.settings.privateData;
         if (!auth0_domain || !auth0_clientId || !afterSignInPageId) return;
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
