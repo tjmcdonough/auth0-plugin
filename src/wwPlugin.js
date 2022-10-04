@@ -53,7 +53,7 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    parseHash: (hash, cb) => {
+    parseHash (hash, cb) {
         return webAuthClient.parseHash({ hash }, cb);
     },
     async googleLoginWithRedirect() {
@@ -65,15 +65,32 @@ export default {
             connection_scope: '',
         });
     },
+    async checkIsAuthenticated() {
+        const isAuthenticated = await this.client.isAuthenticated();
+        wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, isAuthenticated);
+        const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, accessToken);
+        const user = await this.client.getUser();
+        wwLib.wwVariable.updateValue(
+            `${this.id}-user`,
+            user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
+        );
+    },
     async checkRedirectHash() {
         try {
             const router = wwLib.manager ? wwLib.getEditorRouter() : wwLib.getFrontRouter();
             await router.isReady();
             const authHash = router.currentRoute.value.has;
             wwLib.wwLog.error(`got auth hash of ${authHash}`);
-            if (authHash?.accessToken) {
-                await this.setCookieSession();
-                this.redirectAfterLogin();
+            if (authHash) {
+                this.parseHash(window.location.hash, async (err, parsedHash) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        await this.setCookieSession(parsedHash.accessToken);
+                        this.redirectAfterLogin();
+                    }
+                });
             }
         } catch (err) {
             wwLib.wwLog.error(err);
