@@ -53,9 +53,6 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    parseHash (hash, cb) {
-        return webAuthClient.parseHash({ hash }, cb);
-    },
     async googleLoginWithRedirect() {
         if (!this.auth0_webClient) {
             wwLib.wwLog.error('auth0 webclient is not initialised');
@@ -83,7 +80,7 @@ export default {
             const authHash = router.currentRoute.value.has;
             wwLib.wwLog.error(`got auth hash of ${authHash}`);
             if (authHash) {
-                this.parseHash(window.location.hash, async (err, parsedHash) => {
+                this.auth0_webClient.parseHash({ hash: window.location.hash}, async (err, parsedHash) => {
                     if (err) {
                         throw err;
                     } else {
