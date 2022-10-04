@@ -57,7 +57,7 @@ export default {
             wwLib.wwLog.log('setting clientId')
             this.$emit('update:settings', {
                 ...this.settings,
-                privateData: { ...this.settings.publicData, auth0_clientId: clientId },
+                privateData: { ...this.settings.privateData, auth0_clientId: clientId },
             });
         },
         async onClientIdChange () {
