@@ -36,12 +36,12 @@ export default {
         try {
             this.auth0_webClient = await auth0.WebAuth({
                 audience: auth0_audienceURL,
-                responseType: 'token',
-                leeway: 60, // allow for clock skew between devices and server
-                scope: 'openid profile email',
+                clientID: auth0_clientId,
                 domain: auth0_domain,
-                client_id: auth0_clientId,
+                leeway: 60, // allow for clock skew between devices and server
                 redirect_uri: `${window.location.origin}${pagePath}`,
+                responseType: 'token',
+                scope: 'openid profile email',
             });
         } catch (err) {
             wwLib.wwLog.error(err);
