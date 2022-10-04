@@ -10,7 +10,7 @@
                 :model-value="settings.publicData.auth0_domain" large @update:modelValue="setDomain" />
         </wwEditorFormRow>
         <wwEditorFormRow required label="Auth0 ClientId">
-            <wwEditorInputText v-model="settings.publicData.auth0_clientId" type="text" placeholder="" large
+            <wwEditorInputText v-model="settings.privateData.auth0_clientId" type="text" placeholder="" large
                 @update:modelValue="setClientId" />
         </wwEditorFormRow>
         <wwEditorFormRow required label="Auth0 Audience URL">
