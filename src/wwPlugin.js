@@ -127,7 +127,7 @@ export default {
         const pagePath = wwLib.wwPageHelper.getPagePath(afterLogoutPageId, defaultLang.lang);
 
         const logoutURI = `${window.location.origin}${pagePath}`;
-        wwLib.wwLog.error(`logoutURI path is: ${redirectURI}`);
+        wwLib.wwLog.error(`logoutURI path is: ${logoutURI}`);
 
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
