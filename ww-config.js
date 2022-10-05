@@ -31,7 +31,7 @@ export default {
                     const { web3_clientId } = settings.publicData;
                     return !!web3_clientId;
                 },
-            }
+            },
         ],
     },
     variables: [
@@ -46,15 +46,30 @@ export default {
         {
             name: 'Google Login with Redirect',
             code: 'googleLoginWithRedirect',
-            isAsync: true
+            isAsync: true,
         },
         /**
          * web3 actions
          */
         {
-            name: 'Get Web3 User Info',
+            name: 'Web3 - Get Web3 User Info',
             code: 'web3_getUserInfo',
-            isAsync: true
-        }
+            isAsync: true,
+        },
+        {
+            name: 'Web3 - Get Balance',
+            code: 'web3_getBalance',
+            isAsync: true,
+        },
+        {
+            name: 'Web3 - Sign Eth Message',
+            code: 'web3_signEthMessage',
+            isAsync: true,
+        },
+        {
+            name: 'Web3 - Send Eth',
+            code: 'web3_sendEth',
+            isAsync: true,
+        },
     ],
 };

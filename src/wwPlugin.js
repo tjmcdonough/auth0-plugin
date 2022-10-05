@@ -192,4 +192,55 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
+    async web3_getBalance() {
+        try {
+            const web3Provider = web3.provider();
+
+            const web3Instance = new Web3(web3Provider);
+            const accounts = await web3Instance.eth.getAccounts();
+            const balance = await web3Instance.eth.getBalance(accounts[0]);
+
+            return balance;
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
+    async web3_signEthMessage(originalMessage) {
+        try {
+            const web3Provider = web3.provider();
+            const web3 = new Web3();
+            web3.setProvider(web3Provider);
+
+            const fromAddress = (await web3.eth.getAccounts())[0];
+            const params = [originalMessage, fromAddress];
+            const method = 'eth_signTypedData';
+
+            const signedMessage = await web3Provider.request({
+                method,
+                params,
+            });
+
+            return signedMessage;
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
+    async web3_sendEth(amount) {
+        try {
+            const web3Provider = web3.provider();
+            const web3 = new Web3();
+            web3.setProvider(web3Provider);
+
+            const accounts = await web3.eth.getAccounts();
+
+            const txRes = await web3.eth.sendTransaction({
+                from: accounts[0],
+                to: accounts[0],
+                value: web3.utils.toWei(amount),
+            });
+            return txRes;
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
 };
