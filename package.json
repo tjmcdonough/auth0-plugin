@@ -1,27 +1,27 @@
 {
-  "name": "custom-weweb-auth-plugin",
-  "version": "1.1.0",
-  "description": "This is an plugin for [weweb.io](https://www.weweb.io/).",
-  "main": "ww-config.js",
-  "scripts": {
-    "build": "weweb build",
-    "serve": "weweb serve"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@vue/eslint-config-prettier": "^7.0.0",
-    "@weweb/cli": "latest",
-    "eslint": "^8.24.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.5.1",
-    "prettier": "^2.7.1"
-  },
-  "dependencies": {
-    "auth0-js": "^9.19.1",
-    "@web3auth/base": "^2.1.2",
-    "@web3auth/core": "^2.1.2",
-    "@web3auth/openlogin-adapter": "^2.1.2",
-    "web3": "^1.8.0"
-  }
+    "name": "custom-weweb-auth-plugin",
+    "version": "1.1.1",
+    "description": "This is an plugin for [weweb.io](https://www.weweb.io/).",
+    "main": "ww-config.js",
+    "scripts": {
+        "build": "weweb build",
+        "serve": "weweb serve"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@vue/eslint-config-prettier": "^7.0.0",
+        "@weweb/cli": "latest",
+        "eslint": "^8.24.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-vue": "^9.5.1",
+        "prettier": "^2.7.1"
+    },
+    "dependencies": {
+        "auth0-js": "^9.19.1",
+        "@web3auth/base": "^2.1.2",
+        "@web3auth/core": "^2.1.2",
+        "@web3auth/openlogin-adapter": "^2.1.2",
+        "web3": "^1.8.0"
+    }
 }
