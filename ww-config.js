@@ -48,6 +48,11 @@ export default {
             code: 'googleLoginWithRedirect',
             isAsync: true,
         },
+        {
+            name: 'Logout',
+            code: 'logout',
+            isAsync: false,
+        },
         /**
          * web3 actions
          */

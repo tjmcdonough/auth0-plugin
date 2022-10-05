@@ -65,15 +65,6 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    async googleLoginWithRedirect() {
-        if (!this.auth0_webClient) {
-            wwLib.wwLog.error('auth0 webclient is not initialised');
-        } else
-            return this.auth0_webClient.authorize({
-                connection: 'google-oauth2',
-                connection_scope: '',
-            });
-    },
     async checkIsAuthenticated() {
         const isAuthenticated = await this.client.isAuthenticated();
         wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, isAuthenticated);
@@ -117,6 +108,34 @@ export default {
         /* wwEditor:start */
         wwLib.goTo(this.settings.publicData.afterSignInPageId);
         /* wwEditor:end */
+    },
+    // ACTION ------------
+    async googleLoginWithRedirect() {
+        if (!this.auth0_webClient) {
+            wwLib.wwLog.error('auth0 webclient is not initialised');
+        } else
+            return this.auth0_webClient.authorize({
+                connection: 'google-oauth2',
+                connection_scope: '',
+            });
+    },
+    // ACTION ------------
+    logout() {
+        const { afterLogoutPageId } = this.settings.publicData;
+
+        const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
+        const pagePath = wwLib.wwPageHelper.getPagePath(afterLogoutPageId, defaultLang.lang);
+
+        const logoutURI = `${window.location.origin}${pagePath}`;
+        wwLib.wwLog.error(`logoutURI path is: ${redirectURI}`);
+
+        window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
+
+        if (this.web3_client) this.web3_client.logout();
+        if (this.auth0_webClient)
+            this.web3_client.logout({
+                returnTo: logoutURI,
+            });
     },
 
     /*=============================================m_ÔÔ_m=============================================\
@@ -185,6 +204,7 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
+    // ACTION ------------
     async web3_getUserInfo() {
         try {
             return this.web3_client.getUserInfo();
@@ -192,6 +212,7 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
+    // ACTION ------------
     async web3_getBalance() {
         try {
             const web3Provider = web3.provider();
@@ -205,6 +226,7 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
+    // ACTION ------------
     async web3_signEthMessage(originalMessage) {
         try {
             const web3Provider = web3.provider();
@@ -225,6 +247,7 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
+    // ACTION ------------
     async web3_sendEth(amount) {
         try {
             const web3Provider = web3.provider();
