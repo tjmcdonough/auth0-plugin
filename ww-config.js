@@ -32,7 +32,7 @@ export default {
                     return !!web3_clientId;
                 },
             }
-        ],,
+        ],
     },
     variables: [
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
