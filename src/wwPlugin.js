@@ -8,6 +8,11 @@ import './components/Functions/Login.vue';
 
 import auth0 from 'auth0-js';
 
+import Web3 from "web3";
+import { Web3AuthCore } from "@web3auth/core";
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import { ADAPTER_STATUS, CHAIN_NAMESPACES } from "@web3auth/base";
+
 const ACCESS_COOKIE_NAME = 'session';
 
 export default {
@@ -18,6 +23,7 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
+        await this.createWeb3Instance();
         await this.checkRedirectHash();
     },
     /*=============================================m_ÔÔ_m=============================================\
@@ -106,4 +112,59 @@ export default {
         wwLib.goTo(this.settings.publicData.afterSignInPageId);
         /* wwEditor:end */
     },
+
+    /*=============================================m_ÔÔ_m=============================================\
+        Web3 API
+    \================================================================================================*/
+    web3_client: undefined,
+    web3_loginAdapterName: undefined,
+
+    async createWeb3Instance() {
+        try {
+            // const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
+            const { auth0_clientId, web3_clientId } = this.settings.publicData;
+    
+            this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
+            const adapter = new OpenloginAdapter({
+                adapterSettings: {
+                    network: "testnet",
+                    clientId: web3_clientId,
+                    uxMode: "redirect",
+                    loginConfig: {
+                    jwt: {
+                        name: "any name",
+                        verifier: "JWT-br-test",
+                        typeOfLogin: "jwt",
+                        clientId: auth0_clientId,
+                    },
+                    },
+                },
+            });
+
+            this.web3_client.configureAdapter(adapter);
+            this.web3_loginAdapterName = adapter.name;
+
+            await this.web3_client.init();
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
+
+    async connectToWallet(jwtToken) {
+        try {
+            const { auth0_domain } = this.settings.publicData;
+
+            await this.web3_client.init();
+            await this.web3_client.connectTo(adapter.name, {
+                loginProvider: "jwt",
+                extraLoginOptions: {
+                    id_token: jwtToken,
+                    verifierIdField: "sub", // same as your JWT Verifier ID
+                    domain: auth0_domain,
+                },
+            });
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    }
 };
