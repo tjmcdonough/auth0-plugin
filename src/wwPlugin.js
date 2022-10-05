@@ -1,8 +1,10 @@
 /* wwEditor:start */
 import './components/Redirections/SettingsEdit.vue';
 import './components/Redirections/SettingsSummary.vue';
-import './components/Configuration/SettingsEdit.vue';
-import './components/Configuration/SettingsSummary.vue';
+import './components/Configuration/Auth0SettingsEdit.vue';
+import './components/Configuration/Auth0SettingsSummary.vue';
+import './components/Configuration/Web3SettingsEdit.vue';
+import './components/Configuration/Web3SettingsSummary.vue';
 import './components/Functions/Login.vue';
 /* wwEditor:end */
 

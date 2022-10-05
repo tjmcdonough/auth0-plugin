@@ -2,10 +2,10 @@ export default {
     editor: {
         settings: [
             {
-                label: 'Configuration',
+                label: 'Auth0 Configuration',
                 icon: 'advanced',
-                edit: () => import('./src/components/Configuration/SettingsEdit.vue'),
-                summary: () => import('./src/components/Configuration/SettingsSummary.vue'),
+                edit: () => import('./src/components/Configuration/Auth0SettingsEdit.vue'),
+                summary: () => import('./src/components/Configuration/Auth0SettingsSummary.vue'),
                 getIsValid(settings) {
                     const { auth0_domain, auth0_audienceURL } = settings.publicData;
                     const { auth0_clientId } = settings.publicData;
@@ -22,9 +22,17 @@ export default {
                     return !!afterSignInPageId && !!afterLogoutPageId;
                 },
             },
-        ],
-        // unsure what this is required for
-        // designSystemId: 'ec2eebfe-499b-43c4-b260-80ee5a4d9504',
+            {
+                label: 'Web3 Configuration',
+                icon: 'advanced',
+                edit: () => import('./src/components/Configuration/Web3SettingsEdit.vue'),
+                summary: () => import('./src/components/Configuration/Web3SettingsSummary.vue'),
+                getIsValid(settings) {
+                    const { web3_clientId } = settings.publicData;
+                    return !!web3_clientId;
+                },
+            }
+        ],,
     },
     variables: [
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
