@@ -120,7 +120,7 @@ export default {
             });
     },
     // ACTION ------------
-    logout() {
+    async logout() {
         const { afterLogoutPageId } = this.settings.publicData;
 
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
@@ -131,9 +131,9 @@ export default {
 
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
-        if (this.web3_client) this.web3_client.logout();
+        if (this.web3_client) await this.web3_client.logout().catch(() => {});
         if (this.auth0_webClient)
-            this.web3_client.logout({
+            this.auth0_webClient.logout({
                 returnTo: logoutURI,
             });
     },

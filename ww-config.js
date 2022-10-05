@@ -51,7 +51,7 @@ export default {
         {
             name: 'Logout',
             code: 'logout',
-            isAsync: false,
+            isAsync: true,
         },
         /**
          * web3 actions
