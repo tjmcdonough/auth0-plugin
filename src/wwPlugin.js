@@ -124,6 +124,18 @@ export default {
             // const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
             const { auth0_clientId, web3_clientId } = this.settings.publicData;
     
+            const chainConfig = {
+                chainNamespace: CHAIN_NAMESPACES.EIP155,
+                chainId: "0x1",
+            };
+            
+            const Web3AuthCoreOptions = {
+                chainConfig,
+                clientId: web3_clientId,
+                enableLogging: true,
+                storageKey: "local",
+            };
+
             this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
             const adapter = new OpenloginAdapter({
                 adapterSettings: {
