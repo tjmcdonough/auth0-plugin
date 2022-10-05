@@ -10,10 +10,10 @@ import './components/Functions/Login.vue';
 
 import auth0 from 'auth0-js';
 
-import Web3 from "web3";
-import { Web3AuthCore } from "@web3auth/core";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { ADAPTER_STATUS, CHAIN_NAMESPACES } from "@web3auth/base";
+import Web3 from 'web3';
+import { Web3AuthCore } from '@web3auth/core';
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
+import { ADAPTER_STATUS, CHAIN_NAMESPACES } from '@web3auth/base';
 
 const ACCESS_COOKIE_NAME = 'session';
 
@@ -39,14 +39,18 @@ export default {
         // const { auth0_clientId } = this.settings.privateData;
         const { auth0_clientId } = this.settings.publicData;
         if (!auth0_domain || !auth0_clientId || !afterSignInPageId) {
-            wwLib.wwLog.error(`auth0 configuration is not complete - auth0_domain: ${Boolean(auth0_domain)}, auth0_clientId: ${Boolean(auth0_clientId)}, afterSignInPageId: ${Boolean(afterSignInPageId)}`);
+            wwLib.wwLog.error(
+                `auth0 configuration is not complete - auth0_domain: ${Boolean(
+                    auth0_domain
+                )}, auth0_clientId: ${Boolean(auth0_clientId)}, afterSignInPageId: ${Boolean(afterSignInPageId)}`
+            );
             return;
         }
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
 
         const redirectURI = `${window.location.origin}${pagePath}`;
-        wwLib.wwLog.error(`redirectURI path is: ${redirectURI}`)
+        wwLib.wwLog.error(`redirectURI path is: ${redirectURI}`);
         try {
             this.auth0_webClient = new auth0.WebAuth({
                 audience: auth0_audienceURL,
@@ -64,11 +68,11 @@ export default {
     async googleLoginWithRedirect() {
         if (!this.auth0_webClient) {
             wwLib.wwLog.error('auth0 webclient is not initialised');
-        }
-        else return this.auth0_webClient.authorize({
-            connection: 'google-oauth2',
-            connection_scope: '',
-        });
+        } else
+            return this.auth0_webClient.authorize({
+                connection: 'google-oauth2',
+                connection_scope: '',
+            });
     },
     async checkIsAuthenticated() {
         const isAuthenticated = await this.client.isAuthenticated();
@@ -88,7 +92,7 @@ export default {
             const authHash = router.currentRoute.value.hash;
             wwLib.wwLog.error(`got auth hash of ${authHash}`);
             if (authHash) {
-                this.auth0_webClient.parseHash({ hash: window.location.hash}, async (err, parsedHash) => {
+                this.auth0_webClient.parseHash({ hash: window.location.hash }, async (err, parsedHash) => {
                     if (err) {
                         throw err;
                     } else {
@@ -125,32 +129,32 @@ export default {
         try {
             // const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
             const { auth0_clientId, web3_clientId } = this.settings.publicData;
-    
+
             const chainConfig = {
                 chainNamespace: CHAIN_NAMESPACES.EIP155,
-                chainId: "0x1",
+                chainId: '0x1',
             };
-            
+
             const Web3AuthCoreOptions = {
                 chainConfig,
                 clientId: web3_clientId,
                 enableLogging: true,
-                storageKey: "local",
+                storageKey: 'local',
             };
 
             this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
             const adapter = new OpenloginAdapter({
                 adapterSettings: {
-                    network: "testnet",
+                    network: 'testnet',
                     clientId: web3_clientId,
-                    uxMode: "redirect",
+                    uxMode: 'redirect',
                     loginConfig: {
-                    jwt: {
-                        name: "any name",
-                        verifier: "JWT-br-test",
-                        typeOfLogin: "jwt",
-                        clientId: auth0_clientId,
-                    },
+                        jwt: {
+                            name: 'any name',
+                            verifier: 'JWT-br-test',
+                            typeOfLogin: 'jwt',
+                            clientId: auth0_clientId,
+                        },
                     },
                 },
             });
@@ -170,15 +174,22 @@ export default {
 
             await this.web3_client.init();
             await this.web3_client.connectTo(adapter.name, {
-                loginProvider: "jwt",
+                loginProvider: 'jwt',
                 extraLoginOptions: {
                     id_token: jwtToken,
-                    verifierIdField: "sub", // same as your JWT Verifier ID
+                    verifierIdField: 'sub', // same as your JWT Verifier ID
                     domain: auth0_domain,
                 },
             });
         } catch (err) {
             wwLib.wwLog.error(err);
         }
-    }
+    },
+    async web3_getUserInfo() {
+        try {
+            return this.web3_client.getUserInfo();
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
 };

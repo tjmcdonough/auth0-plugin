@@ -40,10 +40,21 @@ export default {
         { name: 'isAuthenticated', value: 'isAuthenticated', type: 'boolean', defaultValue: false },
     ],
     actions: [
+        /**
+         * Auth0 actions
+         */
         {
             name: 'Google Login with Redirect',
             code: 'googleLoginWithRedirect',
             isAsync: true
         },
+        /**
+         * web3 actions
+         */
+        {
+            name: 'Get Web3 User Info',
+            code: 'web3_getUserInfo',
+            isAsync: true
+        }
     ],
 };
