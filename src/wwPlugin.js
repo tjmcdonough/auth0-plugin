@@ -91,6 +91,7 @@ export default {
                         throw err;
                     } else {
                         await this.setCookieSession(parsedHash.accessToken);
+                        await this.connectToWallet(parsedHash.accessToken);
                         this.redirectAfterLogin();
                     }
                 });
