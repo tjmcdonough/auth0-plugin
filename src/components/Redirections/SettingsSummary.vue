@@ -1,16 +1,30 @@
 <template>
     <div class="auth0-settings-summary">
-        <wwEditorFormRow label="Page to redirect after the user signed-in">
+        <wwEditorFormRow label="Page to redirect after the external login">
             <div class="auth0-settings-summary__elem">
-                <div><wwEditorIcon large name="document" class="auth0-settings-summary__icon" /></div>
+                <div>
+                    <wwEditorIcon large name="document" class="auth0-settings-summary__icon" />
+                </div>
                 <span class="auth0-settings-summary__value caption-m">
-                    {{ getPageFromId(settings.publicData.afterSignInPageId).name }}
+                    {{ getPageFromId(settings.publicData.redirectPageId).name }}
+                </span>
+            </div>
+        </wwEditorFormRow>
+        <wwEditorFormRow label="Page to redirect after the successful login">
+            <div class="auth0-settings-summary__elem">
+                <div>
+                    <wwEditorIcon large name="document" class="auth0-settings-summary__icon" />
+                </div>
+                <span class="auth0-settings-summary__value caption-m">
+                    {{ getPageFromId(settings.publicData.afterLoginPageId).name }}
                 </span>
             </div>
         </wwEditorFormRow>
         <wwEditorFormRow label="Page to redirect when user is not signed-in">
             <div class="auth0-settings-summary__elem">
-                <div><wwEditorIcon large name="document" class="auth0-settings-summary__icon" /></div>
+                <div>
+                    <wwEditorIcon large name="document" class="auth0-settings-summary__icon" />
+                </div>
                 <span class="auth0-settings-summary__value caption-m">
                     {{ getPageFromId(settings.publicData.afterNotSignInPageId).name }}
                 </span>
@@ -25,12 +39,12 @@ export default {
         settings: { type: Object, required: true },
     },
     computed: {
-        pages() {
+        pages () {
             return wwLib.wwWebsiteData.getPages();
         },
     },
     methods: {
-        getPageFromId(id) {
+        getPageFromId (id) {
             return this.pages.find(page => page && page.id === id) || {};
         },
     },
@@ -42,13 +56,16 @@ export default {
     &__elem {
         display: flex;
         align-items: center;
+
         &:not(:last-child) {
             margin-bottom: var(--ww-spacing-02);
         }
     }
+
     &__icon {
         margin-right: var(--ww-spacing-02);
     }
+
     &__value {
         overflow: hidden;
         text-overflow: ellipsis;

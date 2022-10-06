@@ -25,8 +25,8 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
-        await this.createWeb3Instance();
         await this.checkRedirectHash();
+        await this.createWeb3Instance();
     },
     /*=============================================m_ÔÔ_m=============================================\
         Auth0 API
@@ -34,20 +34,22 @@ export default {
     auth0_webClient: null,
 
     async createClient() {
-        const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
+        const { auth0_domain, auth0_audienceURL, redirectPageId, afterLoginPageId } = this.settings.publicData;
         // TODO - how can we access privateData in a published app?
         // const { auth0_clientId } = this.settings.privateData;
         const { auth0_clientId } = this.settings.publicData;
-        if (!auth0_domain || !auth0_clientId || !afterSignInPageId) {
+        if (!auth0_domain || !auth0_clientId || !redirectPageId || !afterLoginPageId) {
             wwLib.wwLog.error(
                 `auth0 configuration is not complete - auth0_domain: ${Boolean(
                     auth0_domain
-                )}, auth0_clientId: ${Boolean(auth0_clientId)}, afterSignInPageId: ${Boolean(afterSignInPageId)}`
+                )}, auth0_clientId: ${Boolean(auth0_clientId)}, redirectPageId: ${Boolean(
+                    redirectPageId
+                )}, afterLoginPageId: ${Boolean(afterLoginPageId)}`
             );
             return;
         }
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
-        const pagePath = wwLib.wwPageHelper.getPagePath(afterSignInPageId, defaultLang.lang);
+        const pagePath = wwLib.wwPageHelper.getPagePath(redirectPageId, defaultLang.lang);
 
         const redirectURI = `${window.location.origin}${pagePath}`;
         wwLib.wwLog.error(`redirectURI path is: ${redirectURI}`);
@@ -102,11 +104,12 @@ export default {
     },
     redirectAfterLogin() {
         /* wwFront:start */
-        const pagePath = wwLib.wwPageHelper.getPagePath(this.settings.publicData.afterSignInPageId);
+        const { redirectPageId } = this.settings.publicData;
+        const pagePath = wwLib.wwPageHelper.getPagePath(redirectPageId);
         wwLib.goTo(pagePath);
         /* wwFront:end */
         /* wwEditor:start */
-        wwLib.goTo(this.settings.publicData.afterSignInPageId);
+        wwLib.goTo(redirectPageId);
         /* wwEditor:end */
     },
     // ACTION ------------
@@ -146,42 +149,44 @@ export default {
 
     async createWeb3Instance() {
         try {
-            // const { auth0_domain, auth0_audienceURL, afterSignInPageId } = this.settings.publicData;
-            const { auth0_clientId, web3_clientId } = this.settings.publicData;
+            // skip if already initialised
+            if (!this.web3_client) {
+                const { auth0_clientId, web3_clientId } = this.settings.publicData;
 
-            const chainConfig = {
-                chainNamespace: CHAIN_NAMESPACES.EIP155,
-                chainId: '0x1',
-            };
+                const chainConfig = {
+                    chainNamespace: CHAIN_NAMESPACES.EIP155,
+                    chainId: '0x1',
+                };
 
-            const Web3AuthCoreOptions = {
-                chainConfig,
-                clientId: web3_clientId,
-                enableLogging: true,
-                storageKey: 'local',
-            };
-
-            this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
-            const adapter = new OpenloginAdapter({
-                adapterSettings: {
-                    network: 'testnet',
+                const Web3AuthCoreOptions = {
+                    chainConfig,
                     clientId: web3_clientId,
-                    uxMode: 'redirect',
-                    loginConfig: {
-                        jwt: {
-                            name: 'any name',
-                            verifier: 'JWT-br-test',
-                            typeOfLogin: 'jwt',
-                            clientId: auth0_clientId,
+                    enableLogging: true,
+                    storageKey: 'local',
+                };
+
+                this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
+                const adapter = new OpenloginAdapter({
+                    adapterSettings: {
+                        network: 'testnet',
+                        clientId: web3_clientId,
+                        uxMode: 'redirect',
+                        loginConfig: {
+                            jwt: {
+                                name: 'any name',
+                                verifier: 'JWT-br-test',
+                                typeOfLogin: 'jwt',
+                                clientId: auth0_clientId,
+                            },
                         },
                     },
-                },
-            });
+                });
 
-            this.web3_client.configureAdapter(adapter);
-            this.web3_loginAdapterName = adapter.name;
+                this.web3_client.configureAdapter(adapter);
+                this.web3_loginAdapterName = adapter.name;
 
-            await this.web3_client.init();
+                await this.web3_client.init();
+            }
         } catch (err) {
             wwLib.wwLog.error(err);
         }

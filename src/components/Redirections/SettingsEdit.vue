@@ -1,9 +1,14 @@
 <template>
     <div class="auth0-settings-edit">
-        <wwEditorFormRow required label="Page to redirect after the user signed-in">
+        <wwEditorFormRow required label="Page to redirect after the external login">
+            <wwEditorInputTextSelect name="redirect-page-id" :options="pagesOptions" :actions="pageActions"
+                :model-value="settings.publicData.redirectPageId" placeholder="Select a page" large
+                @update:modelValue="changePublicSettings('redirectPageId', $event)" @action="onAction" />
+        </wwEditorFormRow>
+        <wwEditorFormRow required label="Page to redirect after the successful login">
             <wwEditorInputTextSelect name="after-sign-in-page-id" :options="pagesOptions" :actions="pageActions"
-                :model-value="settings.publicData.afterSignInPageId" placeholder="Select a page" large
-                @update:modelValue="changePublicSettings('afterSignInPageId', $event)" @action="onAction" />
+                :model-value="settings.publicData.afterLoginPageId" placeholder="Select a page" large
+                @update:modelValue="changePublicSettings('afterLoginPageId', $event)" @action="onAction" />
         </wwEditorFormRow>
         <wwEditorFormRow required label="Page to redirect when user is not signed-in or logged out">
             <wwEditorInputTextSelect name="after-sign-out-page-id" :options="pagesOptions" :actions="pageActions"
@@ -14,7 +19,6 @@
 </template>
 
 <script>
-import { getSPAClientRedirection } from '../../wwPlugin.js';
 
 export default {
     props: {

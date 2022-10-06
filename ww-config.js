@@ -18,8 +18,8 @@ export default {
                 edit: () => import('./src/components/Redirections/SettingsEdit.vue'),
                 summary: () => import('./src/components/Redirections/SettingsSummary.vue'),
                 getIsValid(settings) {
-                    const { afterSignInPageId, afterLogoutPageId } = settings.publicData;
-                    return !!afterSignInPageId && !!afterLogoutPageId;
+                    const { redirectPageId, afterLoginPageId, afterLogoutPageId } = settings.publicData;
+                    return !!redirectPageId && !!afterLoginPageId && !!afterLogoutPageId;
                 },
             },
             {
