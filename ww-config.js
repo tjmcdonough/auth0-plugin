@@ -1,5 +1,8 @@
 export default {
     editor: {
+        label: {
+            en: "Auth0 - Web3",
+        },
         settings: [
             {
                 label: 'Auth0 Configuration',
