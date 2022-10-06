@@ -86,6 +86,7 @@ export default {
             wwLib.wwLog.error(`got auth hash of ${authHash}`);
             if (authHash) {
                 this.auth0_webClient.parseHash({ hash: window.location.hash }, async (err, parsedHash) => {
+                    wwLib.wwLog.error(`parseHash, err:${err} parsedHash:${parsedHash}`);
                     if (err) {
                         throw err;
                     } else {
