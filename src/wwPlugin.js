@@ -91,7 +91,7 @@ export default {
                         throw err;
                     } else {
                         await this.setCookieSession(parsedHash.accessToken);
-                        await this.connectToWallet(parsedHash.accessToken);
+                        // await this.web3_connectToWallet(parsedHash.accessToken);
                         this.redirectAfterLogin();
                     }
                 });
@@ -194,7 +194,7 @@ export default {
         }
     },
 
-    async connectToWallet(jwtToken) {
+    async web3_connectToWallet(jwtToken) {
         try {
             const { auth0_domain } = this.settings.publicData;
 

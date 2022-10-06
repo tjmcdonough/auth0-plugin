@@ -1,7 +1,7 @@
 export default {
     editor: {
         label: {
-            en: "Auth0 - Web3",
+            en: 'Auth0 - Web3',
         },
         settings: [
             {
@@ -59,6 +59,11 @@ export default {
         /**
          * web3 actions
          */
+        {
+            name: 'Web3 - Connect to Wallet',
+            code: 'web3_connectToWallet',
+            isAsync: true,
+        },
         {
             name: 'Web3 - Get Web3 User Info',
             code: 'web3_getUserInfo',
