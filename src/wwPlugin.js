@@ -199,7 +199,7 @@ export default {
             const { auth0_domain } = this.settings.publicData;
 
             await this.web3_client.init();
-            await this.web3_client.connectTo(adapter.name, {
+            await this.web3_client.connectTo(this.web3_loginAdapterName, {
                 loginProvider: 'jwt',
                 extraLoginOptions: {
                     id_token: accessToken,
