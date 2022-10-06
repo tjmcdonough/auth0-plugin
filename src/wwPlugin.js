@@ -105,12 +105,12 @@ export default {
     },
     redirectAfterLogin() {
         /* wwFront:start */
-        const { redirectPageId } = this.settings.publicData;
-        const pagePath = wwLib.wwPageHelper.getPagePath(redirectPageId);
+        const { afterLoginPageId } = this.settings.publicData;
+        const pagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId);
         wwLib.goTo(pagePath);
         /* wwFront:end */
         /* wwEditor:start */
-        wwLib.goTo(redirectPageId);
+        wwLib.goTo(afterLoginPageId);
         /* wwEditor:end */
     },
     // ACTION ------------
