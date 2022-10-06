@@ -25,8 +25,8 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
-        await this.checkRedirectHash();
         await this.createWeb3Instance();
+        await this.checkRedirectHash();
     },
     /*=============================================m_ÔÔ_m=============================================\
         Auth0 API
