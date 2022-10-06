@@ -26,7 +26,7 @@
                     <wwEditorIcon large name="document" class="auth0-settings-summary__icon" />
                 </div>
                 <span class="auth0-settings-summary__value caption-m">
-                    {{ getPageFromId(settings.publicData.afterNotSignInPageId).name }}
+                    {{ getPageFromId(settings.publicData.afterLogoutPageId).name }}
                 </span>
             </div>
         </wwEditorFormRow>
