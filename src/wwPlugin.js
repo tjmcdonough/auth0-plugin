@@ -91,7 +91,6 @@ export default {
                         throw err;
                     } else {
                         await this.setCookieSession(parsedHash.accessToken);
-                        // await this.web3_connectToWallet(parsedHash.accessToken);
                         this.redirectAfterLogin();
                     }
                 });
@@ -194,15 +193,16 @@ export default {
         }
     },
 
-    async web3_connectToWallet(jwtToken) {
+    async web3_connectToWallet() {
         try {
+            const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
             const { auth0_domain } = this.settings.publicData;
 
             await this.web3_client.init();
             await this.web3_client.connectTo(adapter.name, {
                 loginProvider: 'jwt',
                 extraLoginOptions: {
-                    id_token: jwtToken,
+                    id_token: accessToken,
                     verifierIdField: 'sub', // same as your JWT Verifier ID
                     domain: auth0_domain,
                 },
