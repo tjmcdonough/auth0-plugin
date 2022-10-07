@@ -152,7 +152,8 @@ export default {
         try {
             // skip if already initialised
             if (!this.web3_client) {
-                const { auth0_clientId, web3_clientId } = this.settings.publicData;
+                const { auth0_clientId, web3_clientId, afterLoginPageId } = this.settings.publicData;
+                const redirectPagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId);
 
                 const chainConfig = {
                     chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -169,6 +170,7 @@ export default {
                 this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
                 const adapter = new OpenloginAdapter({
                     adapterSettings: {
+                        redirectUrl: redirectPagePath,
                         network: 'testnet',
                         clientId: web3_clientId,
                         uxMode: 'redirect',
