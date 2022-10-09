@@ -34,6 +34,7 @@ export default {
     auth0_webClient: null,
 
     async createClient() {
+        wwLib.wwLog.error(`test new version is deployed`);
         const { auth0_domain, auth0_audienceURL, redirectPageId, afterLoginPageId } = this.settings.publicData;
         // TODO - how can we access privateData in a published app?
         // const { auth0_clientId } = this.settings.privateData;
