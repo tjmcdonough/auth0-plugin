@@ -21,8 +21,8 @@ const auth0_domain = 'dev--g2nk2pf.us.auth0.com';
 const auth0_audienceURL = 'https://some.web.com';
 const auth0_clientId = 'EfvbHAhKdAfJvGRIP2MHZYXFhc4iULBi';
 const redirectPageId = 'Redirect';
-const afterLoginPageId = 'Login';
-const afterLogoutPageId = 'Logout';
+const afterLoginPageId = 'KYC';
+const afterLogoutPageId = 'Home';
 const web3_clientId = 'BKhh3QQxPgF8I8CilYPRPnEflFsSbhTw-VAKihjMQIPo5b8A3lFp2CM2hvCTdVeslY1HyvpXyuhmLKh_2FUAG38';
 
 export default {
