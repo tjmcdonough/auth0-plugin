@@ -20,9 +20,9 @@ const ACCESS_COOKIE_NAME = 'session';
 const auth0_domain = 'dev--g2nk2pf.us.auth0.com';
 const auth0_audienceURL = 'https://some.web.com';
 const auth0_clientId = 'EfvbHAhKdAfJvGRIP2MHZYXFhc4iULBi';
-const redirectPageId = 'Redirect';
-const afterLoginPageId = 'KYC';
-const afterLogoutPageId = 'Home';
+const redirectPageId = '91356605-cb69-46cd-8bcf-e9a251ce68d8';
+const afterLoginPageId = '7ed2e74b-326a-48f9-9077-be616fa6bc27';
+const afterLogoutPageId = '179fec96-ab37-4df2-b753-ba384b818969';
 const web3_clientId = 'BKhh3QQxPgF8I8CilYPRPnEflFsSbhTw-VAKihjMQIPo5b8A3lFp2CM2hvCTdVeslY1HyvpXyuhmLKh_2FUAG38';
 
 export default {
