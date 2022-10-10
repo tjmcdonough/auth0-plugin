@@ -17,6 +17,14 @@ import { ADAPTER_STATUS, CHAIN_NAMESPACES } from '@web3auth/base';
 
 const ACCESS_COOKIE_NAME = 'session';
 
+const auth0_domain = 'dev--g2nk2pf.us.auth0.com';
+const auth0_audienceURL = 'https://some.web.com';
+const auth0_clientId = 'EfvbHAhKdAfJvGRIP2MHZYXFhc4iULBi';
+const redirectPageId = 'Redirect';
+const afterLoginPageId = 'Login';
+const afterLogoutPageId = 'Logout';
+const web3_clientId = 'BKhh3QQxPgF8I8CilYPRPnEflFsSbhTw-VAKihjMQIPo5b8A3lFp2CM2hvCTdVeslY1HyvpXyuhmLKh_2FUAG38';
+
 export default {
     /*=============================================m_ÔÔ_m=============================================\
         Plugin API
@@ -35,10 +43,11 @@ export default {
 
     async createClient() {
         wwLib.wwLog.error(`test new version is deployed`);
-        const { auth0_domain, auth0_audienceURL, redirectPageId, afterLoginPageId } = this.settings.publicData;
+        // const { auth0_domain, auth0_audienceURL, redirectPageId, afterLoginPageId } = this.settings.publicData;
+
         // TODO - how can we access privateData in a published app?
         // const { auth0_clientId } = this.settings.privateData;
-        const { auth0_clientId } = this.settings.publicData;
+        // const { auth0_clientId } = this.settings.publicData;
         if (!auth0_domain || !auth0_clientId || !redirectPageId || !afterLoginPageId) {
             wwLib.wwLog.error(
                 `auth0 configuration is not complete - auth0_domain: ${Boolean(
@@ -106,7 +115,7 @@ export default {
     },
     redirectAfterLogin() {
         /* wwFront:start */
-        const { afterLoginPageId } = this.settings.publicData;
+        // const { afterLoginPageId } = this.settings.publicData;
         const pagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId);
         wwLib.goTo(pagePath);
         /* wwFront:end */
@@ -126,7 +135,7 @@ export default {
     },
     // ACTION ------------
     async logout() {
-        const { afterLogoutPageId } = this.settings.publicData;
+        // const { afterLogoutPageId } = this.settings.publicData;
 
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterLogoutPageId, defaultLang.lang);
@@ -153,7 +162,7 @@ export default {
         try {
             // skip if already initialised
             if (!this.web3_client) {
-                const { auth0_clientId, web3_clientId, afterLoginPageId } = this.settings.publicData;
+                // const { auth0_clientId, web3_clientId, afterLoginPageId } = this.settings.publicData;
 
                 const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
                 const redirectPagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId, defaultLang.lang);
@@ -204,7 +213,7 @@ export default {
     async web3_connectToWallet() {
         try {
             const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-            const { auth0_domain } = this.settings.publicData;
+            // const { auth0_domain } = this.settings.publicData;
 
             await this.web3_client.init();
             await this.web3_client.connectTo(this.web3_loginAdapterName, {
