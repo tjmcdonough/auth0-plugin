@@ -18,7 +18,7 @@ import { ADAPTER_STATUS, CHAIN_NAMESPACES } from '@web3auth/base';
 const ACCESS_COOKIE_NAME = 'session';
 
 const auth0_domain = 'dev--g2nk2pf.us.auth0.com';
-const auth0_audienceURL = 'https://some.web.com';
+const auth0_audienceURL = 'https://dev--g2nk2pf.us.auth0.com/api/v2/';
 const auth0_clientId = 'EfvbHAhKdAfJvGRIP2MHZYXFhc4iULBi';
 const redirectPageId = '91356605-cb69-46cd-8bcf-e9a251ce68d8';
 const afterLoginPageId = '7ed2e74b-326a-48f9-9077-be616fa6bc27';
