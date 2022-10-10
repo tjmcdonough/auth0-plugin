@@ -21,7 +21,7 @@ const auth0_domain = 'dev--g2nk2pf.us.auth0.com';
 const auth0_audienceURL = 'https://dev--g2nk2pf.us.auth0.com/api/v2/';
 const auth0_clientId = 'EfvbHAhKdAfJvGRIP2MHZYXFhc4iULBi';
 const redirectPageId = '91356605-cb69-46cd-8bcf-e9a251ce68d8';
-const afterLoginPageId = '7ed2e74b-326a-48f9-9077-be616fa6bc27';
+const afterLoginPageId = '22e68088-4af5-45ac-91a5-5fee386fbd91';
 const afterLogoutPageId = '179fec96-ab37-4df2-b753-ba384b818969';
 const web3_clientId = 'BKhh3QQxPgF8I8CilYPRPnEflFsSbhTw-VAKihjMQIPo5b8A3lFp2CM2hvCTdVeslY1HyvpXyuhmLKh_2FUAG38';
 
