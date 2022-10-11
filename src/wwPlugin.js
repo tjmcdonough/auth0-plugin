@@ -17,14 +17,6 @@ import { ADAPTER_STATUS, CHAIN_NAMESPACES } from '@web3auth/base';
 
 const ACCESS_COOKIE_NAME = 'session';
 
-const auth0_domain = 'dev--g2nk2pf.us.auth0.com';
-const auth0_audienceURL = 'https://dev--g2nk2pf.us.auth0.com/api/v2/';
-const auth0_clientId = 'EfvbHAhKdAfJvGRIP2MHZYXFhc4iULBi';
-const redirectPageId = '91356605-cb69-46cd-8bcf-e9a251ce68d8';
-const afterLoginPageId = '22e68088-4af5-45ac-91a5-5fee386fbd91';
-const afterLogoutPageId = '179fec96-ab37-4df2-b753-ba384b818969';
-const web3_clientId = 'BKhh3QQxPgF8I8CilYPRPnEflFsSbhTw-VAKihjMQIPo5b8A3lFp2CM2hvCTdVeslY1HyvpXyuhmLKh_2FUAG38';
-
 export default {
     /*=============================================m_ÔÔ_m=============================================\
         Plugin API
@@ -33,6 +25,8 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
+        // don't worry about awaiting this check
+        this.checkIsAuthenticated();
         await this.createWeb3Instance();
         await this.checkRedirectHash();
     },
@@ -42,12 +36,11 @@ export default {
     auth0_webClient: null,
 
     async createClient() {
-        wwLib.wwLog.error(`test new version is deployed`);
-        // const { auth0_domain, auth0_audienceURL, redirectPageId, afterLoginPageId } = this.settings.publicData;
+        const { auth0_domain, auth0_audienceURL, redirectPageId, afterLoginPageId } = this.settings.publicData;
 
         // TODO - how can we access privateData in a published app?
         // const { auth0_clientId } = this.settings.privateData;
-        // const { auth0_clientId } = this.settings.publicData;
+        const { auth0_clientId } = this.settings.publicData;
         if (!auth0_domain || !auth0_clientId || !redirectPageId || !afterLoginPageId) {
             wwLib.wwLog.error(
                 `auth0 configuration is not complete - auth0_domain: ${Boolean(
@@ -78,11 +71,11 @@ export default {
         }
     },
     async checkIsAuthenticated() {
-        const isAuthenticated = await this.client.isAuthenticated();
+        const isAuthenticated = await this.auth0_webClient.isAuthenticated();
         wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, isAuthenticated);
         const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, accessToken);
-        const user = await this.client.getUser();
+        const user = await this.auth0_webClient.getUser();
         wwLib.wwVariable.updateValue(
             `${this.id}-user`,
             user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
@@ -115,7 +108,7 @@ export default {
     },
     redirectAfterLogin() {
         /* wwFront:start */
-        // const { afterLoginPageId } = this.settings.publicData;
+        const { afterLoginPageId } = this.settings.publicData;
         const pagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId);
         wwLib.goTo(pagePath);
         /* wwFront:end */
@@ -135,7 +128,7 @@ export default {
     },
     // ACTION ------------
     async logout() {
-        // const { afterLogoutPageId } = this.settings.publicData;
+        const { afterLogoutPageId } = this.settings.publicData;
 
         const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
         const pagePath = wwLib.wwPageHelper.getPagePath(afterLogoutPageId, defaultLang.lang);
@@ -145,11 +138,14 @@ export default {
 
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
-        if (this.web3_client) await this.web3_client.logout().catch(() => {});
-        if (this.auth0_webClient)
+        if (this.web3_client) {
+            await this.web3_client.logout().catch(() => {});
+        }
+        if (this.auth0_webClient) {
             this.auth0_webClient.logout({
                 returnTo: logoutURI,
             });
+        }
     },
 
     /*=============================================m_ÔÔ_m=============================================\
@@ -157,12 +153,13 @@ export default {
     \================================================================================================*/
     web3_client: undefined,
     web3_loginAdapterName: undefined,
+    web3_provider: undefined,
 
     async createWeb3Instance() {
         try {
             // skip if already initialised
             if (!this.web3_client) {
-                // const { auth0_clientId, web3_clientId, afterLoginPageId } = this.settings.publicData;
+                const { auth0_clientId, web3_clientId, afterLoginPageId } = this.settings.publicData;
 
                 const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
                 const redirectPagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId, defaultLang.lang);
@@ -210,10 +207,16 @@ export default {
         }
     },
 
+    getWeb3Provider() {
+        if (!this.web3_client) {
+            wwLib.wwLog.error('web3 provider not initialised');
+        } else return this.web3_client.provider;
+    },
+
     async web3_connectToWallet() {
         try {
             const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-            // const { auth0_domain } = this.settings.publicData;
+            const { auth0_domain } = this.settings.publicData;
 
             await this.web3_client.init();
             await this.web3_client.connectTo(this.web3_loginAdapterName, {
@@ -239,7 +242,7 @@ export default {
     // ACTION ------------
     async web3_getBalance() {
         try {
-            const web3Provider = web3.provider();
+            const web3Provider = this.getWeb3Provider();
 
             const web3Instance = new Web3(web3Provider);
             const accounts = await web3Instance.eth.getAccounts();
@@ -253,7 +256,7 @@ export default {
     // ACTION ------------
     async web3_signEthMessage(originalMessage) {
         try {
-            const web3Provider = web3.provider();
+            const web3Provider = this.getWeb3Provider();
             const web3 = new Web3();
             web3.setProvider(web3Provider);
 
@@ -274,7 +277,7 @@ export default {
     // ACTION ------------
     async web3_sendEth(amount) {
         try {
-            const web3Provider = web3.provider();
+            const web3Provider = this.getWeb3Provider();
             const web3 = new Web3();
             web3.setProvider(web3Provider);
 
