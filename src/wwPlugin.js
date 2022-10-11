@@ -72,7 +72,7 @@ export default {
     },
     async checkIsAuthenticated() {
         try {
-            const idToken = await this.auth0_webClient.authenticateUser();
+            const idToken = await this.web3_client.authenticateUser();
             wwLib.wwLog.error(`web3auth token is ${idToken}`);
             wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, Boolean(idToken));
             wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
