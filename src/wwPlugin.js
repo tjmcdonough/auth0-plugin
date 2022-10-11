@@ -26,9 +26,9 @@ export default {
         this.createClient();
         if (!this.auth0_webClient) return;
         // don't worry about awaiting this check
-        this.checkIsAuthenticated();
         await this.createWeb3Instance();
         await this.checkRedirectHash();
+        await this.checkIsAuthenticated();
     },
     /*=============================================m_ÔÔ_m=============================================\
         Auth0 API
@@ -84,7 +84,7 @@ export default {
             const accounts = this.web3_getWalletAddress();
             wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
         } catch (err) {
-            wwLib.wwLog.error('coud not authenticate user');
+            wwLib.wwLog.error(`could not check authenticated user - ${err}`);
         }
     },
     async checkRedirectHash() {
