@@ -13,7 +13,7 @@ import auth0 from 'auth0-js';
 import Web3 from 'web3';
 import { Web3AuthCore } from '@web3auth/core';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
-import { ADAPTER_STATUS, CHAIN_NAMESPACES } from '@web3auth/base';
+import { CHAIN_NAMESPACES } from '@web3auth/base';
 
 const ACCESS_COOKIE_NAME = 'session';
 
@@ -71,15 +71,21 @@ export default {
         }
     },
     async checkIsAuthenticated() {
-        const isAuthenticated = await this.auth0_webClient.isAuthenticated();
-        wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, isAuthenticated);
-        const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, accessToken);
-        const user = await this.auth0_webClient.getUser();
-        wwLib.wwVariable.updateValue(
-            `${this.id}-user`,
-            user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
-        );
+        try {
+            const idToken = await this.auth0_webClient.authenticateUser();
+            wwLib.wwLog.error(`web3auth token is ${idToken}`);
+            wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, Boolean(idToken));
+            wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
+            const user = await this.web3_getUserInfo();
+            wwLib.wwVariable.updateValue(
+                `${this.id}-user`,
+                user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
+            );
+            const accounts = this.web3_getWalletAddress();
+            wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
+        } catch (err) {
+            wwLib.wwLog.error('coud not authenticate user');
+        }
     },
     async checkRedirectHash() {
         try {
@@ -240,6 +246,14 @@ export default {
         }
     },
     // ACTION ------------
+    async web3_getWalletAddress() {
+        const web3Provider = this.getWeb3Provider();
+
+        const web3Instance = new Web3(web3Provider);
+        const accounts = await web3Instance.eth.getAccounts();
+        return accounts;
+    },
+
     async web3_getBalance() {
         try {
             const web3Provider = this.getWeb3Provider();

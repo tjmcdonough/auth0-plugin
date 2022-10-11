@@ -41,6 +41,7 @@ export default {
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
         { name: 'auth0_jwt', value: 'token', type: 'accessToken', defaultValue: null },
         { name: 'isAuthenticated', value: 'isAuthenticated', type: 'boolean', defaultValue: false },
+        { name: 'web3_accounts', value: 'accounts', type: 'array', defaultValue: [] },
     ],
     actions: [
         /**
@@ -67,6 +68,11 @@ export default {
         {
             name: 'Web3 - Get Web3 User Info',
             code: 'web3_getUserInfo',
+            isAsync: true,
+        },
+        {
+            name: 'Web3 - Get Accounts',
+            code: 'web3_getWalletAddress',
             isAsync: true,
         },
         {
