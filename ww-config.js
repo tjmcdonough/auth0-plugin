@@ -40,6 +40,8 @@ export default {
     variables: [
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
         { name: 'auth0_jwt', value: 'token', type: 'accessToken', defaultValue: null },
+        { name: 'web3_jwt', value: 'token', type: 'accessToken', defaultValue: null },
+        { name: 'web3_user', value: 'user', type: 'object', defaultValue: null },
         { name: 'isAuthenticated', value: 'isAuthenticated', type: 'boolean', defaultValue: false },
         { name: 'web3_accounts', value: 'accounts', type: 'array', defaultValue: [] },
     ],

@@ -72,13 +72,15 @@ export default {
     },
     async checkIsAuthenticated() {
         try {
+            // set auth0 vars
+            this.setAuthVars();
+            // set web3 vars
             const { idToken } = await this.web3_client.authenticateUser();
-            wwLib.wwLog.error(`web3auth token is ${JSON.stringify(idToken, null, 2)}`);
             wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, Boolean(idToken));
-            wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
+            wwLib.wwVariable.updateValue(`${this.id}-web3_jwt`, idToken);
             const user = await this.web3_getUserInfo();
             wwLib.wwVariable.updateValue(
-                `${this.id}-auth0_user`,
+                `${this.id}-web3_user`,
                 user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
             );
             const accounts = await this.web3_getWalletAddress();
@@ -99,7 +101,7 @@ export default {
                     if (err) {
                         throw err;
                     } else {
-                        await this.setCookieSession(parsedHash.accessToken);
+                        this.setCookieSession(parsedHash.accessToken);
                         this.redirectAfterLogin();
                     }
                 });
@@ -108,9 +110,16 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    async setCookieSession(jwt) {
+    setCookieSession(jwt) {
         window.vm.config.globalProperties.$cookie.setCookie(ACCESS_COOKIE_NAME, jwt);
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, jwt);
+    },
+    setAuthVars() {
+        const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, accessToken);
+        const user = this.auth0_webClient.client.userInfo(accessToken, () => {
+            wwLib.wwVariable.updateValue(`${this.id}-auth0_user`, user);
+        });
     },
     redirectAfterLogin() {
         /* wwFront:start */
