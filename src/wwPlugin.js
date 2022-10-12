@@ -117,8 +117,12 @@ export default {
     setAuthVars() {
         const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, accessToken);
-        const user = this.auth0_webClient.client.userInfo(accessToken, () => {
-            wwLib.wwVariable.updateValue(`${this.id}-auth0_user`, user);
+        this.auth0_webClient.client.userInfo(accessToken, (err, userProfile) => {
+            if (err) {
+                wwLib.wwLog.error(err);
+            } else {
+                wwLib.wwVariable.updateValue(`${this.id}-auth0_user`, userProfile);
+            }
         });
     },
     redirectAfterLogin() {
