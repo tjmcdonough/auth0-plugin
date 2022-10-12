@@ -6,9 +6,17 @@
                     <wwEditorIcon large name="bitcoin" class="web3-settings-summary__icon" />
                 </div>
                 <span class="web3-settings-summary__value caption-m">
-                    
                     {{ settings.publicData.web3_clientId }}
-                    
+                </span>
+            </div>
+        </wwEditorFormRow>
+        <wwEditorFormRow label="Verifier Name">
+            <div class="web3-settings-summary__elem">
+                <div>
+                    <wwEditorIcon large name="bitcoin" class="web3-settings-summary__icon" />
+                </div>
+                <span class="web3-settings-summary__value caption-m">
+                    {{ settings.publicData.web3_verifierName }}
                 </span>
             </div>
         </wwEditorFormRow>

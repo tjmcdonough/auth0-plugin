@@ -4,6 +4,10 @@
             <wwEditorInputText v-model="settings.publicData.web3_clientId" type="text" placeholder="" large
                 @update:modelValue="setClientId" />
         </wwEditorFormRow>
+        <wwEditorFormRow required label="Web3 Verifier Name">
+            <wwEditorInputText v-model="settings.publicData.web3_verifierName" type="text" placeholder="" large
+                @update:modelValue="setVerifierName" />
+        </wwEditorFormRow>
         <wwLoader :loading="isLoading" />
     </div>
 </template>
@@ -22,12 +26,19 @@ export default {
     },
     methods: {
         setClientId (clientId) {
-            wwLib.wwLog.log('setting web3 clientId')
+            wwLib.wwLog.log('setting web3 clientId');
             this.$emit('update:settings', {
                 ...this.settings,
                 publicData: { ...this.settings.publicData, web3_clientId: clientId },
             });
-        }
+        },
+        setVerifierName (verifierName) {
+            wwLib.wwLog.log('setting web3 web3_verifierName');
+            this.$emit('update:settings', {
+                ...this.settings,
+                publicData: { ...this.settings.publicData, web3_verifierName: verifierName },
+            });
+        },
     },
 };
 </script>

@@ -178,7 +178,7 @@ export default {
         try {
             // skip if already initialised
             if (!this.web3_client) {
-                const { auth0_clientId, web3_clientId, afterLoginPageId } = this.settings.publicData;
+                const { auth0_clientId, web3_clientId, web3_verifierName, afterLoginPageId } = this.settings.publicData;
 
                 const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
                 const redirectPagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId, defaultLang.lang);
@@ -207,8 +207,8 @@ export default {
                         uxMode: 'redirect',
                         loginConfig: {
                             jwt: {
-                                name: 'any name',
-                                verifier: 'JWT-br-test',
+                                name: web3_verifierName,
+                                verifier: web3_verifierName,
                                 typeOfLogin: 'jwt',
                                 clientId: auth0_clientId,
                             },

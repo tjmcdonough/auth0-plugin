@@ -31,8 +31,8 @@ export default {
                 edit: () => import('./src/components/Configuration/Web3SettingsEdit.vue'),
                 summary: () => import('./src/components/Configuration/Web3SettingsSummary.vue'),
                 getIsValid(settings) {
-                    const { web3_clientId } = settings.publicData;
-                    return !!web3_clientId;
+                    const { web3_clientId, web3_verifierName } = settings.publicData;
+                    return !!web3_clientId && !!web3_verifierName;
                 },
             },
         ],

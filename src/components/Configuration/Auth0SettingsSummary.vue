@@ -16,9 +16,7 @@
                     <wwEditorIcon large name="auth" class="auth0-settings-summary__icon" />
                 </div>
                 <span class="auth0-settings-summary__value caption-m">
-                    
                     {{ settings.publicData.auth0_clientId }}
-                    
                 </span>
             </div>
         </wwEditorFormRow>
