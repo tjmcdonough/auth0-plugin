@@ -102,6 +102,7 @@ export default {
                         throw err;
                     } else {
                         this.setCookieSession(parsedHash.accessToken);
+                        this.loginToAcmeBackend(parsedHash.accessToken);
                         this.redirectAfterLogin();
                     }
                 });
@@ -135,6 +136,25 @@ export default {
         wwLib.goTo(afterLoginPageId);
         /* wwEditor:end */
     },
+    loginToAcmeBackend(jwt) {
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + jwt
+        };
+
+        Axios
+            .post(`${serverUrl}/user/login`, { headers })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => this.loading = false)
+
+    },
     // ACTION ------------
     async googleLoginWithRedirect() {
         if (!this.auth0_webClient) {
@@ -158,7 +178,7 @@ export default {
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
         if (this.web3_client) {
-            await this.web3_client.logout().catch(() => {});
+            await this.web3_client.logout().catch(() => { });
         }
         if (this.auth0_webClient) {
             this.auth0_webClient.logout({
