@@ -14,6 +14,7 @@ import Web3 from 'web3';
 import { Web3AuthCore } from '@web3auth/core';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { CHAIN_NAMESPACES } from '@web3auth/base';
+import Axios from 'axios';
 
 const ACCESS_COOKIE_NAME = 'session';
 
