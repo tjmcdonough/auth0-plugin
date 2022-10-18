@@ -145,10 +145,12 @@ export default {
             'Authorization': 'Bearer ' + jwt
         };
 
+        console.log(jwt);
+
         const serverUrl = 'https://dev.acmedao.com';
 
         Axios
-            .post(`${serverUrl}/user/login`, { headers })
+            .post(`${serverUrl}/user/login`, {}, { headers })
             .then((response) => {
                 console.log(response);
             })
