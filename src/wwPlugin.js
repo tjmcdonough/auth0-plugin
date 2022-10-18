@@ -152,10 +152,10 @@ export default {
         Axios
             .post(`${serverUrl}/user/login`, {}, { headers })
             .then((response) => {
-                console.log(response);
+                console.log("Successfully logged in " + response);
             })
             .catch((error) => {
-                console.log(error)
+                console.log("Failed to log in " + error)
             })
 
     },
