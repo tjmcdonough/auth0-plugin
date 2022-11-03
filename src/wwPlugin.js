@@ -27,6 +27,7 @@ export default {
         this.createClient();
         if (!this.auth0_webClient) return;
         // don't worry about awaiting this check
+        console.log('this.id = ' + this.id);
         await this.createWeb3Instance();
         await this.checkRedirectHash();
         await this.checkIsAuthenticated();
@@ -85,7 +86,11 @@ export default {
                 user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
             );
             const accounts = await this.web3_getWalletAddress();
+
             wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
+            wwLib.wwVariable.updateValue(`${this.id}-web3_Accounts`, accounts);
+            wwLib.wwVariable.updateValue(`${this.id}-web3_walletId`, accounts[0]);
+
         } catch (err) {
             wwLib.wwLog.error(`could not check authenticated user - ${err}`);
         }
@@ -247,13 +252,11 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-
     getWeb3Provider() {
         if (!this.web3_client) {
             wwLib.wwLog.error('web3 provider not initialised');
         } else return this.web3_client.provider;
     },
-
     async web3_connectToWallet() {
         try {
             const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
@@ -286,6 +289,8 @@ export default {
 
         const web3Instance = new Web3(web3Provider);
         const accounts = await web3Instance.eth.getAccounts();
+        console.log(JSON.stringify(accounts))
+
         return accounts;
     },
 
