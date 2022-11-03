@@ -37,6 +37,18 @@ export default {
             },
         ],
     },
+    properties: {
+        web3_Accounts: {
+            label: {
+                en: 'Web3 Accounts',
+            },
+            type: 'Variable',
+            options: {
+                types: ['Array']
+            },
+            bindable: true,
+        }
+    },
     variables: [
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
         { name: 'auth0_jwt', value: 'token', type: 'accessToken', defaultValue: null },

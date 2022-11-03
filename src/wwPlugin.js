@@ -88,8 +88,6 @@ export default {
             const accounts = await this.web3_getWalletAddress();
 
             wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
-            wwLib.wwVariable.updateValue(`${this.id}-web3_Accounts`, accounts);
-            wwLib.wwVariable.updateValue(`${this.id}-web3_walletId`, accounts[0]);
 
         } catch (err) {
             wwLib.wwLog.error(`could not check authenticated user - ${err}`);
