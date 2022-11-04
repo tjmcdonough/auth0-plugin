@@ -153,7 +153,7 @@ export default {
         Axios
             .post(`${serverUrl}/user/login`, {}, { headers })
             .then((response) => {
-                console.log("Successfully logged in using auth0 " + JSON.stringify(response));
+                console.log("Successfully logged in using auth0");
             })
             .catch((error) => {
                 console.log("Failed to log in " + error)
