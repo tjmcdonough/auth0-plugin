@@ -27,7 +27,6 @@ export default {
         this.createClient();
         if (!this.auth0_webClient) return;
         // don't worry about awaiting this check
-        console.log('this.id = ' + this.id);
         await this.createWeb3Instance();
         await this.checkRedirectHash();
         await this.checkIsAuthenticated();
@@ -58,7 +57,7 @@ export default {
 
         const redirectURI = `${window.location.origin}${pagePath}/?`;
         wwLib.wwLog.error(`redirectURI path is: ${redirectURI}`);
-        console.log('auth0_audienceURL: ' + auth0_audienceURL)
+        console.log('auth0_audienceURL: ' + auth0_audienceURL);
         try {
             this.auth0_webClient = new auth0.WebAuth({
                 audience: auth0_clientId,
@@ -89,7 +88,6 @@ export default {
             const accounts = await this.web3_getWalletAddress();
 
             wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
-
         } catch (err) {
             wwLib.wwLog.error(`could not check authenticated user - ${err}`);
         }
@@ -142,32 +140,41 @@ export default {
         /* wwEditor:end */
     },
     loginToAcmeBackend(jwt) {
-
         const headers = {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + jwt
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + jwt,
         };
 
         const serverUrl = 'https://dev.acmedao.com';
 
-        Axios
-            .post(`${serverUrl}/user/login`, {}, { headers })
-            .then((response) => {
-                console.log("Successfully logged in using auth0");
+        Axios.post(`${serverUrl}/user/login`, {}, { headers })
+            .then(response => {
+                console.log('Successfully logged in using auth0');
             })
-            .catch((error) => {
-                console.log("Failed to log in " + error)
-            })
-
+            .catch(error => {
+                console.log('Failed to log in ' + error);
+            });
     },
     // ACTION ------------
     async googleLoginWithRedirect() {
+        return this.socialLoginWithRedirect('google-oauth2');
+    },
+    // ACTION ------------
+    async appleLoginWithRedirect() {
+        return this.socialLoginWithRedirect('apple');
+    },
+    // ACTION ------------
+    async facebookLoginWithRedirect() {
+        return this.socialLoginWithRedirect('facebook');
+    },
+    // ACTION ------------
+    async socialLoginWithRedirect(socialConnection) {
         if (!this.auth0_webClient) {
             wwLib.wwLog.error('auth0 webclient is not initialised');
         } else
             return this.auth0_webClient.authorize({
-                connection: 'google-oauth2',
+                connection: socialConnection,
                 connection_scope: '',
             });
     },
@@ -184,7 +191,7 @@ export default {
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
         if (this.web3_client) {
-            await this.web3_client.logout().catch(() => { });
+            await this.web3_client.logout().catch(() => {});
         }
         if (this.auth0_webClient) {
             this.auth0_webClient.logout({
@@ -288,7 +295,7 @@ export default {
 
         const web3Instance = new Web3(web3Provider);
         const accounts = await web3Instance.eth.getAccounts();
-        console.log(JSON.stringify(accounts))
+        console.log(JSON.stringify(accounts));
 
         return accounts;
     },

@@ -44,10 +44,10 @@ export default {
             },
             type: 'Variable',
             options: {
-                types: ['Array']
+                types: ['Array'],
             },
             bindable: true,
-        }
+        },
     },
     variables: [
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
@@ -64,6 +64,16 @@ export default {
         {
             name: 'Google Login with Redirect',
             code: 'googleLoginWithRedirect',
+            isAsync: true,
+        },
+        {
+            name: 'Apple Login with Redirect',
+            code: 'appleLoginWithRedirect',
+            isAsync: true,
+        },
+        {
+            name: 'Facebook Login with Redirect',
+            code: 'facebookLoginWithRedirect',
             isAsync: true,
         },
         {
