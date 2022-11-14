@@ -60,7 +60,7 @@ export default {
         console.log('auth0_audienceURL: ' + auth0_audienceURL);
         try {
             this.auth0_webClient = new auth0.WebAuth({
-                audience: auth0_clientId,
+                audience: auth0_audienceURL,
                 clientID: auth0_clientId,
                 domain: auth0_domain,
                 leeway: 60, // allow for clock skew between devices and server
