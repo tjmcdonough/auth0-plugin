@@ -58,9 +58,10 @@ export default {
 
         const redirectURI = `${window.location.origin}${pagePath}/?`;
         wwLib.wwLog.error(`redirectURI path is: ${redirectURI}`);
+        console.log('auth0_audienceURL: ' + auth0_audienceURL)
         try {
             this.auth0_webClient = new auth0.WebAuth({
-                audience: auth0_audienceURL,
+                audience: auth0_clientId,
                 clientID: auth0_clientId,
                 domain: auth0_domain,
                 leeway: 60, // allow for clock skew between devices and server
