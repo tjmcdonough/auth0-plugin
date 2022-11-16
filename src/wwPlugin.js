@@ -60,13 +60,13 @@ export default {
         console.log('auth0_audienceURL: ' + auth0_audienceURL);
         try {
             this.auth0_webClient = new auth0.WebAuth({
-                audience: auth0_audienceURL,
+                // audience: auth0_audienceURL,
                 clientID: auth0_clientId,
                 domain: auth0_domain,
                 leeway: 60, // allow for clock skew between devices and server
                 redirectUri: redirectURI,
-                responseType: 'token',
-                scope: 'openid profile email',
+                responseType: 'id_token',
+                scope: 'openid',
             });
         } catch (err) {
             wwLib.wwLog.error(err);
@@ -104,8 +104,8 @@ export default {
                     if (err) {
                         throw err;
                     } else {
-                        this.setCookieSession(parsedHash.accessToken);
-                        this.loginToAcmeBackend(parsedHash.accessToken);
+                        this.setCookieSession(parsedHash.idToken);
+                        this.loginToAcmeBackend(parsedHash.idToken);
                         this.redirectAfterLogin();
                     }
                 });
@@ -119,9 +119,9 @@ export default {
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, jwt);
     },
     setAuthVars() {
-        const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, accessToken);
-        this.auth0_webClient.client.userInfo(accessToken, (err, userProfile) => {
+        const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
+        this.auth0_webClient.client.userInfo(idToken, (err, userProfile) => {
             if (err) {
                 wwLib.wwLog.error(err);
             } else {
@@ -265,14 +265,14 @@ export default {
     },
     async web3_connectToWallet() {
         try {
-            const accessToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+            const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
             const { auth0_domain } = this.settings.publicData;
 
             await this.web3_client.init();
             await this.web3_client.connectTo(this.web3_loginAdapterName, {
                 loginProvider: 'jwt',
                 extraLoginOptions: {
-                    id_token: accessToken,
+                    id_token: idToken,
                     verifierIdField: 'sub', // same as your JWT Verifier ID
                     domain: auth0_domain,
                 },
