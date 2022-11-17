@@ -274,7 +274,7 @@ export default {
                 extraLoginOptions: {
                     id_token: idToken,
                     verifierIdField: 'sub', // same as your JWT Verifier ID
-                    domain: auth0_domain,
+                    domain: `https://${auth0_domain}`,
                 },
             });
         } catch (err) {
