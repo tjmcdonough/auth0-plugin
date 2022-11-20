@@ -296,7 +296,9 @@ export default {
                 rpcTarget: 'https://rpc.ankr.com/eth',
             };
 
-            const verifierId = sub;
+            const parsedJWT = await JSON.parse(atob(idToken.split('.')[1]));
+            console.log('JWT parsed:', parsedJWT);
+            const verifierId = parsedJWT.sub;
             console.log('Verifier ID:', verifierId);
             const { torusNodeEndpoints, torusNodePub, torusIndexes } = await nodeDetailManager.getNodeDetails({
                 verifier: web3_verifierName,
