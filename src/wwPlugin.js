@@ -16,6 +16,12 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import { CHAIN_NAMESPACES } from '@web3auth/base';
 import Axios from 'axios';
 
+import torusUtils from '@toruslabs/torus.js';
+import * as openLoginSubKey from '@toruslabs/openlogin-subkey';
+import fetchNodeDetails from '@toruslabs/fetch-node-details';
+import ethereumjs from '@ethereumjs/tx';
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
+
 const ACCESS_COOKIE_NAME = 'session';
 
 export default {
@@ -264,6 +270,92 @@ export default {
         } else return this.web3_client.provider;
     },
     async web3_connectToWallet() {
+        try {
+            const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+            const { auth0_clientId, web3_clientId, web3_verifierName } = this.settings.publicData;
+
+            console.log('begin connect to wallet');
+            // begin web3 self host
+
+            const torus = new torusUtils({
+                enableOneKey: true,
+                network: 'https://polygon-mainnet.infura.io/v3/6b555ca82a3c440bb8cef518001c94c6',
+                allowHost: 'https://signer-polygon.tor.us/api/allow',
+                signerHost: 'https://signer-polygon.tor.us/api/sign',
+            });
+
+            // Initializing the NodeDetailManager instance for Ropsten Testnet
+            // NOTE: change proxyAddress to `NodeDetailManager.PROXY_ADDRESS_MAINNET` when you switch to production
+            const nodeDetailManager = new fetchNodeDetails({
+                network: 'https://polygon-mainnet.infura.io/v3/6b555ca82a3c440bb8cef518001c94c6',
+                proxyAddress: fetchNodeDetails.PROXY_ADDRESS_CYAN,
+            });
+
+            const chainConfig = {
+                chainId: '0x1',
+                rpcTarget: 'https://rpc.ankr.com/eth',
+            };
+
+            const verifierId = sub;
+            console.log('Verifier ID:', verifierId);
+            const { torusNodeEndpoints, torusNodePub, torusIndexes } = await nodeDetailManager.getNodeDetails({
+                verifier: web3_verifierName,
+                verifierId,
+            });
+            const userDetails = await torus.getUserTypeAndAddress(
+                torusNodeEndpoints,
+                torusNodePub,
+                { verifier: web3_verifierName, verifierId },
+                true
+            );
+            // Now we check if the user has enabled mfa or not.
+            // if !userDetails.upgraded then mfa is not enabled.
+            console.log(userDetails);
+            const mfaEnabled = !(userDetails.typeOfUser === 'v2' && !userDetails.upgraded);
+            console.log('Is MFA enabled: ', mfaEnabled);
+
+            if (mfaEnabled == false) {
+                console.log('if mfa disabled');
+                // torus is initialized in code snippet above
+                // if YES, login directly with the torus libraries within your app
+                const keyDetails = await torus.retrieveShares(
+                    torusNodeEndpoints,
+                    torusIndexes,
+                    web3_verifierName,
+                    { verifier_id: verifierId },
+                    jwtToken,
+                    {}
+                );
+                // use the private key to get the provider
+
+                const finalPrivKey = openLoginSubKey
+                    .subkey(
+                        keyDetails.privKey.padStart(64, '0'),
+                        ethereumjs.Buffer.Buffer.from(web3_clientId, 'base64')
+                    )
+                    .padStart(64, '0');
+                console.log(finalPrivKey);
+                const ethereumPrivateKeyProvider = new EthereumPrivateKeyProvider({
+                    config: {
+                        chainConfig,
+                    },
+                });
+                await ethereumPrivateKeyProvider.setupProvider(finalPrivKey);
+                console.log(ethereumPrivateKeyProvider.provider);
+                if (ethereumPrivateKeyProvider.provider) {
+                    const web3 = new Web3(ethereumPrivateKeyProvider.provider);
+                    this.web3_client = web3;
+                    return web3;
+                } else {
+                    return null;
+                }
+            }
+            return null;
+        } catch (err) {
+            wwLib.wwLog.error(err);
+        }
+    },
+    async web3_connectToWallet_old() {
         try {
             const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
             const { auth0_domain } = this.settings.publicData;
