@@ -272,7 +272,7 @@ export default {
     async web3_connectToWallet() {
         try {
             const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-            const { auth0_clientId, web3_clientId, web3_verifierName } = this.settings.publicData;
+            const { web3_clientId, web3_verifierName } = this.settings.publicData;
 
             console.log('begin connect to wallet');
             // begin web3 self host
@@ -323,7 +323,7 @@ export default {
                     torusIndexes,
                     web3_verifierName,
                     { verifier_id: verifierId },
-                    jwtToken,
+                    idToken,
                     {}
                 );
                 // use the private key to get the provider
