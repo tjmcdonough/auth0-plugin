@@ -353,24 +353,24 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    async web3_connectToWallet_old() {
-        try {
-            const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-            const { auth0_domain } = this.settings.publicData;
+    // async web3_connectToWallet_old() {
+    //     try {
+    //         const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+    //         const { auth0_domain } = this.settings.publicData;
 
-            await this.web3_client.init();
-            await this.web3_client.connectTo(this.web3_loginAdapterName, {
-                loginProvider: 'jwt',
-                extraLoginOptions: {
-                    id_token: idToken,
-                    verifierIdField: 'sub', // same as your JWT Verifier ID
-                    domain: `https://${auth0_domain}`,
-                },
-            });
-        } catch (err) {
-            wwLib.wwLog.error(err);
-        }
-    },
+    //         await this.web3_client.init();
+    //         await this.web3_client.connectTo(this.web3_loginAdapterName, {
+    //             loginProvider: 'jwt',
+    //             extraLoginOptions: {
+    //                 id_token: idToken,
+    //                 verifierIdField: 'sub', // same as your JWT Verifier ID
+    //                 domain: `https://${auth0_domain}`,
+    //             },
+    //         });
+    //     } catch (err) {
+    //         wwLib.wwLog.error(err);
+    //     }
+    // },
     // ACTION ------------
     async web3_getUserInfo() {
         try {
