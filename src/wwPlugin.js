@@ -19,7 +19,6 @@ import Axios from 'axios';
 import torusUtils from '@toruslabs/torus.js';
 import * as openLoginSubKey from '@toruslabs/openlogin-subkey';
 import fetchNodeDetails from '@toruslabs/fetch-node-details';
-import ethereumjs from '@ethereumjs/tx';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 
 const ACCESS_COOKIE_NAME = 'session';
@@ -331,10 +330,7 @@ export default {
                 // use the private key to get the provider
 
                 const finalPrivKey = openLoginSubKey
-                    .subkey(
-                        keyDetails.privKey.padStart(64, '0'),
-                        ethereumjs.Buffer.Buffer.from(web3_clientId, 'base64')
-                    )
+                    .subkey(keyDetails.privKey.padStart(64, '0'), Buffer.from(web3_clientId, 'base64'))
                     .padStart(64, '0');
                 console.log(finalPrivKey);
                 const ethereumPrivateKeyProvider = new EthereumPrivateKeyProvider({
