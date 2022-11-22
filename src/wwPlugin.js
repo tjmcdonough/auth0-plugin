@@ -11,9 +11,6 @@ import './components/Functions/Login.vue';
 import auth0 from 'auth0-js';
 
 import Web3 from 'web3';
-import { Web3AuthCore } from '@web3auth/core';
-import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
-import { CHAIN_NAMESPACES } from '@web3auth/base';
 import Axios from 'axios';
 
 import torusUtils from '@toruslabs/torus.js';
@@ -31,8 +28,6 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
-        // don't worry about awaiting this check
-        await this.createWeb3Instance();
         await this.checkRedirectHash();
         await this.checkIsAuthenticated();
     },
@@ -81,17 +76,9 @@ export default {
         try {
             // set auth0 vars
             this.setAuthVars();
-            // set web3 vars
-            const { idToken } = await this.web3_client.authenticateUser();
-            wwLib.wwVariable.updateValue(`${this.id}-isAuthenticated`, Boolean(idToken));
-            wwLib.wwVariable.updateValue(`${this.id}-web3_jwt`, idToken);
-            const user = await this.web3_getUserInfo();
-            wwLib.wwVariable.updateValue(
-                `${this.id}-web3_user`,
-                user ? JSON.parse(JSON.stringify(user).replace(/https:\/\/auth0.weweb.io\//g, '')) : null
-            );
+            // connect to web3
+            await this.web3_connectToWallet();
             const accounts = await this.web3_getWalletAddress();
-
             wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
         } catch (err) {
             wwLib.wwLog.error(`could not check authenticated user - ${err}`);
@@ -212,62 +199,6 @@ export default {
     web3_loginAdapterName: undefined,
     web3_provider: undefined,
 
-    async createWeb3Instance() {
-        try {
-            // skip if already initialised
-            if (!this.web3_client) {
-                const { auth0_clientId, web3_clientId, web3_verifierName, afterLoginPageId } = this.settings.publicData;
-
-                const defaultLang = wwLib.wwWebsiteData.getInfo().langs.find(lang => lang.default);
-                const redirectPagePath = wwLib.wwPageHelper.getPagePath(afterLoginPageId, defaultLang.lang);
-
-                const redirectURI = `${window.location.origin}${redirectPagePath}`;
-                wwLib.wwLog.error(`redirectURI path is: ${redirectURI} from afterLoginPageId: ${afterLoginPageId}`);
-
-                const chainConfig = {
-                    chainNamespace: CHAIN_NAMESPACES.EIP155,
-                    chainId: '0x1',
-                };
-
-                const Web3AuthCoreOptions = {
-                    chainConfig,
-                    clientId: web3_clientId,
-                    enableLogging: true,
-                    storageKey: 'local',
-                };
-
-                this.web3_client = new Web3AuthCore(Web3AuthCoreOptions);
-                const adapter = new OpenloginAdapter({
-                    adapterSettings: {
-                        redirectUrl: redirectURI,
-                        network: 'testnet',
-                        clientId: web3_clientId,
-                        uxMode: 'redirect',
-                        loginConfig: {
-                            jwt: {
-                                name: web3_verifierName,
-                                verifier: web3_verifierName,
-                                typeOfLogin: 'jwt',
-                                clientId: auth0_clientId,
-                            },
-                        },
-                    },
-                });
-
-                this.web3_client.configureAdapter(adapter);
-                this.web3_loginAdapterName = adapter.name;
-
-                await this.web3_client.init();
-            }
-        } catch (err) {
-            wwLib.wwLog.error(err);
-        }
-    },
-    getWeb3Provider() {
-        if (!this.web3_client) {
-            wwLib.wwLog.error('web3 provider not initialised');
-        } else return this.web3_client.provider;
-    },
     async web3_connectToWallet() {
         try {
             const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
@@ -339,7 +270,7 @@ export default {
                     },
                 });
                 await ethereumPrivateKeyProvider.setupProvider(finalPrivKey);
-                console.log(ethereumPrivateKeyProvider.provider);
+                console.log('eth provider: ', ethereumPrivateKeyProvider.provider);
                 if (ethereumPrivateKeyProvider.provider) {
                     const web3 = new Web3(ethereumPrivateKeyProvider.provider);
                     this.web3_client = web3;
@@ -353,24 +284,6 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    // async web3_connectToWallet_old() {
-    //     try {
-    //         const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-    //         const { auth0_domain } = this.settings.publicData;
-
-    //         await this.web3_client.init();
-    //         await this.web3_client.connectTo(this.web3_loginAdapterName, {
-    //             loginProvider: 'jwt',
-    //             extraLoginOptions: {
-    //                 id_token: idToken,
-    //                 verifierIdField: 'sub', // same as your JWT Verifier ID
-    //                 domain: `https://${auth0_domain}`,
-    //             },
-    //         });
-    //     } catch (err) {
-    //         wwLib.wwLog.error(err);
-    //     }
-    // },
     // ACTION ------------
     async web3_getUserInfo() {
         try {
@@ -381,23 +294,18 @@ export default {
     },
     // ACTION ------------
     async web3_getWalletAddress() {
-        const web3Provider = this.getWeb3Provider();
-
-        const web3Instance = new Web3(web3Provider);
-        const accounts = await web3Instance.eth.getAccounts();
-        console.log(JSON.stringify(accounts));
+        console.log('Getting Wallet...');
+        const accounts = await this.web3_client.eth.getAccounts();
+        console.log('Wallets: ', JSON.stringify(accounts));
 
         return accounts;
     },
 
     async web3_getBalance() {
         try {
-            const web3Provider = this.getWeb3Provider();
-
-            const web3Instance = new Web3(web3Provider);
-            const accounts = await web3Instance.eth.getAccounts();
-            const balance = await web3Instance.eth.getBalance(accounts[0]);
-
+            console.log('Getting Wallet Balance...');
+            const balance = await this.web3_client.eth.getBalance(accounts[0]);
+            console.log('Balance: ', balance);
             return balance;
         } catch (err) {
             wwLib.wwLog.error(err);
@@ -406,15 +314,12 @@ export default {
     // ACTION ------------
     async web3_signEthMessage(originalMessage) {
         try {
-            const web3Provider = this.getWeb3Provider();
-            const web3 = new Web3();
-            web3.setProvider(web3Provider);
-
-            const fromAddress = (await web3.eth.getAccounts())[0];
-            const params = [originalMessage, fromAddress];
+            console.log('Signing Message...');
+            const fromAddress = (await this.web3_client.eth.getAccounts())[0];
             const method = 'eth_signTypedData';
+            const params = [originalMessage, fromAddress];
 
-            const signedMessage = await web3Provider.request({
+            const signedMessage = await this.web3_client.request({
                 method,
                 params,
             });
@@ -427,13 +332,10 @@ export default {
     // ACTION ------------
     async web3_sendEth(amount) {
         try {
-            const web3Provider = this.getWeb3Provider();
-            const web3 = new Web3();
-            web3.setProvider(web3Provider);
+            console.log('Sending Eth...');
+            const accounts = await this.web3_client.eth.getAccounts();
 
-            const accounts = await web3.eth.getAccounts();
-
-            const txRes = await web3.eth.sendTransaction({
+            const txRes = await this.web3_client.eth.sendTransaction({
                 from: accounts[0],
                 to: accounts[0],
                 value: web3.utils.toWei(amount),
