@@ -77,9 +77,9 @@ export default {
             // set auth0 vars
             this.setAuthVars();
             // connect to web3
-            await this.web3_connectToWallet();
-            const accounts = await this.web3_getWalletAddress();
-            wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
+            // await this.web3_connectToWallet();
+            // const accounts = await this.web3_getWalletAddress();
+            // wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
         } catch (err) {
             wwLib.wwLog.error(`could not check authenticated user - ${err}`);
         }
@@ -183,7 +183,7 @@ export default {
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
         if (this.web3_client) {
-            await this.web3_client.logout().catch(() => {});
+            await this.web3_client.eth.currentProvider.disconnect().catch(() => {});
         }
         if (this.auth0_webClient) {
             this.auth0_webClient.logout({
