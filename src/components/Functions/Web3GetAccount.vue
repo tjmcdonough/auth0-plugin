@@ -1,8 +1,7 @@
 <template>
     <wwEditorFormRow label="Web 3" required>
-        <wwEditorInputRow label="Web3 Instance" type="text" :model-value="web3Instance" bindable
-            @update:modelValue="setWeb3Instance">
-        </wwEditorInputRow>
+        <wwEditorInputRow label="Web3 Instance" type="query" :model-value="web3Instance" bindable
+            placeholder="Attach Web3 Instance Variable" @update:modelValue="setWeb3Instance" />
     </wwEditorFormRow>
 </template>
 
