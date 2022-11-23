@@ -274,6 +274,7 @@ export default {
                 if (ethereumPrivateKeyProvider.provider) {
                     const web3 = new Web3(ethereumPrivateKeyProvider.provider);
                     this.web3_client = web3;
+                    wwLib.wwVariable.updateValue(`${this.id}-web3_instance`, web3);
                     return web3;
                 } else {
                     return null;
@@ -295,7 +296,9 @@ export default {
     // ACTION ------------
     async web3_getWalletAddress() {
         console.log('Getting Wallet...');
-        const accounts = await this.web3_client.eth.getAccounts();
+        const web3 = wwLib.wwVariable.getValue(`${this.id}-web3_instance`);
+        console.log('got web3 instance', web3);
+        const accounts = await web3.eth.getAccounts();
         console.log('Wallets: ', JSON.stringify(accounts));
 
         return accounts;

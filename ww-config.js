@@ -99,9 +99,6 @@ export default {
             name: 'Web3 - Get Accounts',
             code: 'web3_getWalletAddress',
             isAsync: true,
-            /* wwEditor:start */
-            edit: () => import('./src/components/Functions/Web3GetAccount.vue'),
-            /* wwEditor:end */
         },
         {
             name: 'Web3 - Get Balance',
