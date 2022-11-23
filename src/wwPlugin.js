@@ -113,13 +113,13 @@ export default {
     setAuthVars() {
         const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
-        this.auth0_webClient.client.userInfo(idToken, (err, userProfile) => {
-            if (err) {
-                wwLib.wwLog.error(err);
-            } else {
-                wwLib.wwVariable.updateValue(`${this.id}-auth0_user`, userProfile);
-            }
-        });
+        // this.auth0_webClient.client.userInfo(idToken, (err, userProfile) => {
+        //     if (err) {
+        //         wwLib.wwLog.error(err);
+        //     } else {
+        //         wwLib.wwVariable.updateValue(`${this.id}-auth0_user`, userProfile);
+        //     }
+        // });
     },
     redirectAfterLogin() {
         /* wwFront:start */
@@ -183,7 +183,7 @@ export default {
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
         if (this.web3_client) {
-            await this.web3_client.eth.currentProvider.disconnect().catch(() => {});
+            await this.web3_client.eth.currentProvider.disconnect().catch(() => { });
         }
         if (this.auth0_webClient) {
             this.auth0_webClient.logout({
