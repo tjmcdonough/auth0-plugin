@@ -307,7 +307,9 @@ export default {
     async web3_getBalance() {
         try {
             console.log('Getting Wallet Balance...');
-            const balance = await this.web3_client.eth.getBalance(accounts[0]);
+            const web3 = wwLib.wwVariable.getValue(`${this.id}-web3_instance`);
+            console.log('got web3 instance', web3);
+            const balance = await web3.eth.getBalance(accounts[0]);
             console.log('Balance: ', balance);
             return balance;
         } catch (err) {
@@ -318,11 +320,12 @@ export default {
     async web3_signEthMessage(originalMessage) {
         try {
             console.log('Signing Message...');
-            const fromAddress = (await this.web3_client.eth.getAccounts())[0];
+            const web3 = wwLib.wwVariable.getValue(`${this.id}-web3_instance`);
+            console.log('got web3 instance', web3);
             const method = 'eth_signTypedData';
             const params = [originalMessage, fromAddress];
 
-            const signedMessage = await this.web3_client.request({
+            const signedMessage = await web3.request({
                 method,
                 params,
             });
@@ -336,9 +339,11 @@ export default {
     async web3_sendEth(amount) {
         try {
             console.log('Sending Eth...');
-            const accounts = await this.web3_client.eth.getAccounts();
+            const web3 = wwLib.wwVariable.getValue(`${this.id}-web3_instance`);
+            console.log('got web3 instance', web3);
+            const accounts = await web3.eth.getAccounts();
 
-            const txRes = await this.web3_client.eth.sendTransaction({
+            const txRes = await web3.eth.sendTransaction({
                 from: accounts[0],
                 to: accounts[0],
                 value: web3.utils.toWei(amount),
