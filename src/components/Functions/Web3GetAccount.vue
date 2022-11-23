@@ -9,12 +9,7 @@
 export default {
     props: {
         plugin: { type: Object, required: true },
-        args: {
-            type: Object,
-            default: () => ({
-                web3Instance: null,
-            }),
-        },
+        args: { type: Object, required: true },
     },
     emits: ['update:args'],
     data () {

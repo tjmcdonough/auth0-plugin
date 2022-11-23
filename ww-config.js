@@ -52,7 +52,7 @@ export default {
     variables: [
         { name: 'auth0_user', value: 'user', type: 'object', defaultValue: null },
         { name: 'auth0_jwt', value: 'token', type: 'accessToken', defaultValue: null },
-        { name: 'web3_instance', value: 'web3Instance', type: 'object', defaultValue: undefined },
+        { name: 'web3_instance', value: 'web3Instance', type: 'object', defaultValue: null },
         { name: 'web3_jwt', value: 'token', type: 'accessToken', defaultValue: null },
         { name: 'web3_user', value: 'user', type: 'object', defaultValue: null },
         { name: 'isAuthenticated', value: 'isAuthenticated', type: 'boolean', defaultValue: false },
@@ -101,9 +101,6 @@ export default {
             isAsync: true,
             /* wwEditor:start */
             edit: () => import('./src/components/Functions/Web3GetAccount.vue'),
-            getIsValid({ web3instance }) {
-                return !!web3instance;
-            },
             /* wwEditor:end */
         },
         {
