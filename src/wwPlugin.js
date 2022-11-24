@@ -193,7 +193,8 @@ export default {
     },
     // ACTION
     async renewSession() {
-        return webAuthClient.checkSession({}, (err, authResult) => {
+        console.log('renewing auth0 ID Token');
+        return this.auth0_webClient.checkSession({}, (err, authResult) => {
             if (err) {
                 wwLib.wwLog.error('auth0 failed renewing session - recommend logging out if this occurs', err);
             } else {
