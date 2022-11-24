@@ -171,8 +171,9 @@ export default {
     renewSession() {
         console.log('renewing auth0 ID Token with auth client:', this.auth0_webClient);
         if (this.auth0_webClient) {
+            const webClient = this.auth0_webClient;
             return new Promise(function (resolve, reject) {
-                this.auth0_webClient.checkSession({}, (reject, resolve));
+                webClient.checkSession({}, (reject, resolve));
             })
                 .then(authResult => {
                     wwLib.wwLog.error('auth0 succeeded renewing session - received new idToken', authResult.idToken);
