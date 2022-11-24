@@ -29,7 +29,6 @@ export default {
         this.createClient();
         if (!this.auth0_webClient) return;
         await this.checkRedirectHash();
-        await this.checkIsAuthenticated();
     },
     /*=============================================m_ÔÔ_m=============================================\
         Auth0 API
@@ -72,18 +71,6 @@ export default {
             wwLib.wwLog.error(err);
         }
     },
-    async checkIsAuthenticated() {
-        try {
-            // set auth0 vars
-            this.setAuthVars();
-            // connect to web3
-            // await this.web3_connectToWallet();
-            // const accounts = await this.web3_getWalletAddress();
-            // wwLib.wwVariable.updateValue(`${this.id}-web3_accounts`, accounts);
-        } catch (err) {
-            wwLib.wwLog.error(`could not check authenticated user - ${err}`);
-        }
-    },
     async checkRedirectHash() {
         try {
             const router = wwLib.manager ? wwLib.getEditorRouter() : wwLib.getFrontRouter();
@@ -109,17 +96,6 @@ export default {
     setCookieSession(jwt) {
         window.vm.config.globalProperties.$cookie.setCookie(ACCESS_COOKIE_NAME, jwt);
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, jwt);
-    },
-    setAuthVars() {
-        const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
-        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
-        // this.auth0_webClient.client.userInfo(idToken, (err, userProfile) => {
-        //     if (err) {
-        //         wwLib.wwLog.error(err);
-        //     } else {
-        //         wwLib.wwVariable.updateValue(`${this.id}-auth0_user`, userProfile);
-        //     }
-        // });
     },
     redirectAfterLogin() {
         /* wwFront:start */
@@ -192,17 +168,23 @@ export default {
         }
     },
     // ACTION
-    async renewSession() {
-        console.log('renewing auth0 ID Token');
-        return this.auth0_webClient.checkSession({}, (err, authResult) => {
-            if (err) {
-                wwLib.wwLog.error('auth0 failed renewing session - recommend logging out if this occurs', err);
-            } else {
-                wwLib.wwLog.error('auth0 failed renewing session - received new idToken', idToken);
-                this.setCookieSession(authResult.idToken);
-                return authResult.idToken;
+    renewSession() {
+        try {
+            console.log('renewing auth0 ID Token');
+            if (this.auth0_webClient) {
+                return this.auth0_webClient.checkSession({}, (err, authResult) => {
+                    if (err) {
+                        wwLib.wwLog.error('auth0 failed renewing session - recommend logging out if this occurs', err);
+                    } else {
+                        wwLib.wwLog.error('auth0 succeeded renewing session - received new idToken', idToken);
+                        this.setCookieSession(authResult.idToken);
+                        return authResult.idToken;
+                    }
+                });
             }
-        });
+        } catch (err) {
+            wwLib.wwLog.error('renewSession - unexpected error', err);
+        }
     },
 
     /*=============================================m_ÔÔ_m=============================================\
