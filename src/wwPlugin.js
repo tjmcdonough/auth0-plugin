@@ -183,13 +183,25 @@ export default {
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
         if (this.web3_client) {
-            await this.web3_client.eth.currentProvider.disconnect().catch(() => { });
+            await this.web3_client.eth.currentProvider.disconnect().catch(() => {});
         }
         if (this.auth0_webClient) {
             this.auth0_webClient.logout({
                 returnTo: logoutURI,
             });
         }
+    },
+    // ACTION
+    async renewSession() {
+        return webAuthClient.checkSession({}, (err, authResult) => {
+            if (err) {
+                wwLib.wwLog.error('auth0 failed renewing session - recommend logging out if this occurs', err);
+            } else {
+                wwLib.wwLog.error('auth0 failed renewing session - received new idToken', idToken);
+                this.setCookieSession(authResult.idToken);
+                return authResult.idToken;
+            }
+        });
     },
 
     /*=============================================m_ÔÔ_m=============================================\

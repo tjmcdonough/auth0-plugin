@@ -78,8 +78,13 @@ export default {
             isAsync: true,
         },
         {
-            name: 'Logout',
+            name: 'Logout web3 and Auth0',
             code: 'logout',
+            isAsync: true,
+        },
+        {
+            name: 'Renew Auth0 idToken',
+            code: 'renewSession',
             isAsync: true,
         },
         /**

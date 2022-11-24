@@ -1,6 +1,6 @@
 {
     "name": "custom-weweb-auth-plugin",
-    "version": "1.5.29",
+    "version": "1.5.30",
     "description": "This is an plugin for [weweb.io](https://www.weweb.io/).",
     "main": "ww-config.js",
     "scripts": {
