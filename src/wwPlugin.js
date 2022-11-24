@@ -173,7 +173,15 @@ export default {
         if (this.auth0_webClient) {
             const webClient = this.auth0_webClient;
             return new Promise(function (resolve, reject) {
-                webClient.checkSession({}, (reject, resolve));
+                webClient.checkSession({}, (err, authResult) => {
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    } else {
+                        console.log({ authResult });
+                        resolve(authResult);
+                    }
+                });
             })
                 .then(authResult => {
                     console.log({ authResult });
