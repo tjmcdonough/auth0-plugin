@@ -176,6 +176,7 @@ export default {
                 webClient.checkSession({}, (reject, resolve));
             })
                 .then(authResult => {
+                    console.log({ authResult });
                     wwLib.wwLog.error('auth0 succeeded renewing session - received new idToken', authResult.idToken);
                     this.setCookieSession(authResult.idToken);
                     return authResult.idToken;
