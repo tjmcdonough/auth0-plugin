@@ -85,7 +85,7 @@ export default {
         {
             name: 'Renew Auth0 idToken',
             code: 'renewSession',
-            isAsync: false,
+            isAsync: true,
         },
         /**
          * web3 actions

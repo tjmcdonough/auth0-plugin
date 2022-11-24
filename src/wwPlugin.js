@@ -169,21 +169,19 @@ export default {
     },
     // ACTION
     renewSession() {
-        try {
-            console.log('renewing auth0 ID Token');
-            if (this.auth0_webClient) {
-                return this.auth0_webClient.checkSession({}, (err, authResult) => {
-                    if (err) {
-                        wwLib.wwLog.error('auth0 failed renewing session - recommend logging out if this occurs', err);
-                    } else {
-                        wwLib.wwLog.error('auth0 succeeded renewing session - received new idToken', idToken);
-                        this.setCookieSession(authResult.idToken);
-                        return authResult.idToken;
-                    }
+        console.log('renewing auth0 ID Token with auth client:', this.auth0_webClient);
+        if (this.auth0_webClient) {
+            return new Promise(function (resolve, reject) {
+                this.auth0_webClient.checkSession({}, (reject, resolve));
+            })
+                .then(authResult => {
+                    wwLib.wwLog.error('auth0 succeeded renewing session - received new idToken', idToken);
+                    this.setCookieSession(authResult.idToken);
+                    return authResult.idToken;
+                })
+                .catch(err => {
+                    wwLib.wwLog.error('auth0 failed renewing session - recommend logging out if this occurs', err);
                 });
-            }
-        } catch (err) {
-            wwLib.wwLog.error('renewSession - unexpected error', err);
         }
     },
 
