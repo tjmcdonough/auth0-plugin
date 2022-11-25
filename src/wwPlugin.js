@@ -28,6 +28,7 @@ export default {
         wwLib.wwLog.error('custom Auth0 plugin loading');
         this.createClient();
         if (!this.auth0_webClient) return;
+        await this.setAuthVar();
         await this.checkRedirectHash();
     },
     /*=============================================m_ÔÔ_m=============================================\
@@ -96,6 +97,10 @@ export default {
     setCookieSession(jwt) {
         window.vm.config.globalProperties.$cookie.setCookie(ACCESS_COOKIE_NAME, jwt);
         wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, jwt);
+    },
+    setAuthVar() {
+        const idToken = window.vm.config.globalProperties.$cookie.getCookie(ACCESS_COOKIE_NAME);
+        wwLib.wwVariable.updateValue(`${this.id}-auth0_jwt`, idToken);
     },
     redirectAfterLogin() {
         /* wwFront:start */
