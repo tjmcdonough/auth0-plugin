@@ -344,19 +344,23 @@ export default {
         }
     },
     // ACTION ------------
-    async web3_sendEth(amount) {
+    async web3_sendTransaction(payload) {
         try {
-            console.log('Sending Eth...');
-            const web3 = wwLib.wwVariable.getValue(`${this.id}-web3_instance`);
-            console.log('got web3 instance', web3);
-            const accounts = await web3.eth.getAccounts();
+            console.log('Sending Transaction for payload...', payload);
+            const webTxPayload3 = wwLib.wwVariable.getValue(`${this.id}-web3_temp_txPayload`);
+            console.log('got web3_temp_txPayload through name', web3);
 
-            const txRes = await web3.eth.sendTransaction({
-                from: accounts[0],
-                to: accounts[0],
-                value: web3.utils.toWei(amount),
-            });
-            return txRes;
+            const webTxPayload3UUID = wwLib.wwVariable.getValue(`eac21142-dca0-4e4e-aff2-1eae1f5fa777`);
+            console.log('got web3_temp_txPayload through uuid ', webTxPayload3UUID);
+
+            const receipts = [];
+            for (let i = 0; i < webTxPayload3.length; i++) {
+                const body = payload[i].body;
+                receipt = await web3.eth.sendTransaction(body);
+                console.log('Tx', i, receipt);
+                receipts.push(receipt);
+            }
+            return receipts;
         } catch (err) {
             wwLib.wwLog.error(err);
         }

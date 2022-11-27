@@ -117,7 +117,7 @@ export default {
         },
         {
             name: 'Web3 - Send Eth',
-            code: 'web3_sendEth',
+            code: 'web3_sendTransaction',
             isAsync: true,
         },
     ],
