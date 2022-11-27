@@ -344,11 +344,11 @@ export default {
         }
     },
     // ACTION ------------
-    async web3_sendTransaction(payload) {
+    async web3_sendTransaction() {
         try {
-            console.log('Sending Transaction for payload...', payload);
-            const webTxPayload3 = wwLib.wwVariable.getValue(`${this.id}-web3_temp_txPayload`);
-            console.log('got web3_temp_txPayload through name', web3);
+            console.log('Sending Transaction...');
+            // const webTxPayload3 = wwLib.wwVariable.getValue(`${this.id}-web3_temp_txPayload`);
+            // console.log('got web3_temp_txPayload through name', web3);
 
             const webTxPayload3UUID = wwLib.wwVariable.getValue(`eac21142-dca0-4e4e-aff2-1eae1f5fa777`);
             console.log('got web3_temp_txPayload through uuid ', webTxPayload3UUID);
