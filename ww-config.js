@@ -106,6 +106,11 @@ export default {
             isAsync: true,
         },
         {
+            name: 'Web3 - Update Wallet Id',
+            code: 'web3_updateWalletId',
+            isAsync: true,
+        },
+        {
             name: 'Web3 - Get Balance',
             code: 'web3_getBalance',
             isAsync: true,

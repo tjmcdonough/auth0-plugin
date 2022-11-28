@@ -164,7 +164,7 @@ export default {
         window.vm.config.globalProperties.$cookie.removeCookie(ACCESS_COOKIE_NAME);
 
         if (this.web3_client) {
-            await this.web3_client.eth.currentProvider.disconnect().catch(() => {});
+            await this.web3_client.eth.currentProvider.disconnect().catch(() => { });
         }
         if (this.auth0_webClient) {
             this.auth0_webClient.logout({
@@ -310,6 +310,16 @@ export default {
         console.log('Wallets: ', JSON.stringify(accounts));
 
         return accounts;
+    },
+
+    async web3_updateWalletId() {
+        console.log('Updating Wallet Id...');
+        const accounts = await web3_getWalletAddress();
+        const walletId = accounts[0];
+        wwLib.wwVariable.updateValue(`${this.id}-web3_walletId`, walletId);
+        // can delete after test
+        const updatedWalletId = wwLib.wwVariable.getValue(`${this.id}-web3_walletId`);
+        console.log('web3_walletId: ' + updatedWalletId)
     },
 
     async web3_getBalance() {
